@@ -1,0 +1,35 @@
+#title {
+  font-weight: 600;
+  text-align: center;
+}
+
+div {
+  display: flex;
+}
+
+label {
+  color: "gray";
+  font-size: 10;
+  margin-bottom: 0.3rem;
+}
+
+#connection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+#root-container {
+  justify-content: center;
+}
+
+#submit-button {
+  border-radius: 20px;
+  background-color: "blue";
+}
+
+.connection-field {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+}

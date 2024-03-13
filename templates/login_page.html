@@ -1,14 +1,29 @@
 <!DOCTYPE>
 <html>
-{{template "head.html" .}}
+
+<head>
+  {{template "head.html" .}}
+  <link rel="stylesheet" href="./assets/css/login.css" />
+</head>
 
 <body>
-  <h1>Docker Site</h1>
-  <div>
-    <p>Username :</p>
-    <input type="text" placeholder="username" />
-    <p>Password :</p>
-    <input type="password" placeholder="password" />
+  <h1 id="title">Docker Site</h1>
+  <div id="root-container">
+    <form id="connection" hx-post="/login" hx-target="#error-connection-div">
+      <div class="connection-field">
+        <label for="username">Username :</label>
+        <input name="username" type="text" placeholder="username" />
+      </div>
+      <div class="connection-field">
+        <label for="password">Password :</label>
+        <input name="password" type="password" placeholder="password" />
+      </div>
+      <div class="connection-field">
+        <input class="submit-button" type="submit" />
+      </div>
+      <div id="error-connection-div">
+      </div>
+    </form>
   </div>
 </body>
 
