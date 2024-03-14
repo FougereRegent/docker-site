@@ -5,13 +5,13 @@ import (
 	"docker-site/entity"
 	"docker-site/helper"
 	"docker-site/middleware"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	helper.InitClient("/var/run/docker.sock")
 	initDb()
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
