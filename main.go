@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-	helper.InitClient("/var/run/docker.sock")
+	helper.InitClient("/var/run/docker.sock", "http://localhost")
 	initDb()
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
