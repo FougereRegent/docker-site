@@ -3,22 +3,33 @@ package service
 import (
 	"docker-site/dto"
 	"docker-site/helper"
+	"encoding/json"
+	"net/http"
 )
 
 const (
-	CONTAINER_LIST string = "http://localhost/containers/json"
-	IMAGES_LIST    string = "http://localhost/images/json"
-	VOLUMES_LIST   string = "http://localhost/volumes/json"
-	NETWORK_LIST   string = "http://localhost/network/json"
+	CONTAINER_LIST string = "/containers/json"
+	IMAGES_LIST    string = "/images/json"
+	VOLUMES_LIST   string = "/volumes/json"
+	NETWORK_LIST   string = "/network/json"
 )
 
 func GetContainerResume() (*dto.ContainerResume, error) {
-	client, err := helper.GetClient()
-	if client == nil {
+	var dtoContainer []dto.DockerContainer
+	client := helper.MakeRequest(helper.GET)
+	result, err := client.Send(CONTAINER_LIST, http.StatusOK)
+
+	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	err = json.Unmarshal(result, &dtoContainer)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &dto.ContainerResume{}, nil
 }
 
 func GetImageResume() (*dto.ImageResume, error) {

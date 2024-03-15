@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -15,7 +16,7 @@ const (
 type Method int
 
 type MethodAction interface {
-	Send(path string) (result []byte, err error)
+	Send(path string, expectStatusCode int) (result []byte, err error)
 }
 
 type HttpClient struct {
@@ -65,12 +66,16 @@ func MakeRequest(method Method) MethodAction {
 	return result
 }
 
-func (meth *GetMethod) Send(path string) (result []byte, err error) {
+func (meth *GetMethod) Send(path string, expectStatusCode int) (result []byte, err error) {
 	url := fmt.Sprintf("%s/%s", __client.UrlBase, path)
 	resp, err := __client.Client.Get(url)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != expectStatusCode {
+		return nil, errors.New("Mauvais Status")
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -81,12 +86,16 @@ func (meth *GetMethod) Send(path string) (result []byte, err error) {
 	return body, nil
 }
 
-func (meth *PostMethod) Send(path string) (result []byte, err error) {
+func (meth *PostMethod) Send(path string, expectStatusCode int) (result []byte, err error) {
 	url := fmt.Sprintf("%s/%s", __client.UrlBase, path)
 	resp, err := __client.Client.Post(url, "application/json", nil)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode != expectStatusCode {
+		return nil, errors.New("Mauvais Status")
 	}
 
 	body, err := io.ReadAll(resp.Body)

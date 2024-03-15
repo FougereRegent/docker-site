@@ -34,3 +34,19 @@ type NetworkResume struct {
 	NbHost   int
 	NbBridge int
 }
+
+type DockerContainer struct {
+	Id      string       `json:"Id"`
+	Names   []string     `json:"Names"`
+	Image   string       `json:"Image"`
+	ImageId string       `json:"ImageId"`
+	State   string       `json:"State"`
+	Status  string       `json:"Status"`
+	Ports   []DockerPort `json:"Ports"`
+}
+
+type DockerPort struct {
+	PrivatePort int    `json:"PrivatePort"`
+	PublicPort  int    `json:"PublicPort"`
+	Type        string `json:"Type"`
+}
