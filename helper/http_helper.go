@@ -52,6 +52,19 @@ func InitClient(unixSocket string, base string) *HttpClient {
 	return __client
 }
 
+func MakeRequest(method Method) MethodAction {
+	var result MethodAction
+	switch method {
+	case POST:
+		result = &PostMethod{}
+		break
+	case GET:
+		result = &GetMethod{}
+		break
+	}
+	return result
+}
+
 func (meth *GetMethod) Send(path string) (result []byte, err error) {
 	url := fmt.Sprintf("%s/%s", __client.UrlBase, path)
 	resp, err := __client.Client.Get(url)
