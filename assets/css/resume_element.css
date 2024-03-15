@@ -1,0 +1,15 @@
+:root {
+  --backround-color-resume-element: e7e7e7
+}
+
+
+.resume-element-container {
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem;
+  border-color: var(--backround-color-resume-element);
+  border-style: solid;
+  border-radius: 5px;
+  background-color: var(--backround-color-resume-element);
+  width: 20%;
+}

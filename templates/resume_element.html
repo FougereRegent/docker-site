@@ -1,0 +1,21 @@
+<div class="resume-element-container" {{if eq .Type "Container" }} hx-get="/docker/container" {{end}} {{if eq
+  .Type "Image" }} hx-get="/docker/image" {{end}} {{if eq .Type "Network" }} hx-get="/docker/network" {{end}} {{if eq
+  .Type "Volume" }} hx-get="/docker/volume" {{end}} hx-trigger="every 5s" hx-swap="outerHTML" hx-target="this">
+  <h2>{{.Type}}</h2>
+  <div>
+    {{if eq .Type "Container" }}
+    <p>Container count : {{.NbElement}}</p>
+    <p>Active Container : {{.NbActive}}</p>
+    {{end}}
+    {{if eq .Type "Image" }}
+    <p>Image count : {{.NbElement}}</p>
+    <p>Total Size : {{printf "%.2f" .TotalSize}} Gb</p>
+    {{end}}
+    {{if eq .Type "Network" }}
+    <p>Network Count : {{.NbElement}}</p>
+    {{end}}
+    {{if eq .Type "Volume" }}
+    <p>Volume Count : {{.NbElement}}</p>
+    {{end}}
+  </div>
+</div>

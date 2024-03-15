@@ -1,10 +1,12 @@
 package dto
 
+import "time"
+
 const (
-	CONTAINER_TYPE ElementType = "container"
-	IMAGE_TYPE     ElementType = "image"
-	VOLUME_TYPE    ElementType = "volume"
-	NETWORK_TYPE   ElementType = "network"
+	CONTAINER_TYPE ElementType = "Container"
+	IMAGE_TYPE     ElementType = "Image"
+	VOLUME_TYPE    ElementType = "Volume"
+	NETWORK_TYPE   ElementType = "Network"
 )
 
 type ElementType string
@@ -30,9 +32,13 @@ type VolumeResume struct {
 
 type NetworkResume struct {
 	Resume
-	NbDriver int
-	NbHost   int
-	NbBridge int
+	NbDriver  int
+	NbHost    int
+	NbBridge  int
+	NbNone    int
+	NbOverlay int
+	NbIpVlan  int
+	NbMacVlan int
 }
 
 type DockerContainer struct {
@@ -49,4 +55,68 @@ type DockerPort struct {
 	PrivatePort int    `json:"PrivatePort"`
 	PublicPort  int    `json:"PublicPort"`
 	Type        string `json:"Type"`
+}
+
+type DockerImage struct {
+	Id         string            `json:"Id"`
+	ParentId   string            `json:"ParentId"`
+	RepoTags   []string          `json:"RepoTags"`
+	RepoDigest []string          `json:"RepoDigest"`
+	Created    int               `json:"Created"`
+	Size       int64             `json:"Size"`
+	Labels     map[string]string `json:"Labels"`
+	Containers int               `json:"Containers"`
+}
+
+type DockerNetwork struct {
+	Name       string    `json:"Name"`
+	Id         string    `json:"Id"`
+	Created    time.Time `json:"Created"`
+	Scope      string    `json:"Scope"`
+	Driver     string    `json:"Driver"`
+	EnableIPv6 bool      `json:"EnableIPv6"`
+	Internal   bool      `json:"Internal"`
+	Attachable bool      `json:"Attachable"`
+	Ingress    bool      `json:"Ingress"`
+}
+
+type DockerVolume struct {
+	Volumes []struct {
+		Name       string                 `json:"Name"`
+		Driver     string                 `json:"Driver"`
+		MountPoint string                 `json:"MountPoint"`
+		CreatedAt  time.Time              `json:"CreatedAt"`
+		Status     map[string]interface{} `json:"Status"`
+		Labels     map[string]interface{} `json:"Labels"`
+		Scope      string                 `json:"Scope"`
+	} `json:"Volumes"`
+}
+
+func (c *DockerImage) ConvertSize() float64 {
+	return float64(c.Size) / 10e09
+}
+
+func (c *DockerNetwork) CountElement(network *NetworkResume) {
+	switch c.Driver {
+	case "host":
+		network.NbHost += 1
+		break
+	case "bridge":
+		network.NbBridge += 1
+		break
+	case "none":
+		network.NbNone += 1
+		break
+	case "overlay":
+		network.NbOverlay += 1
+		break
+	case "macvlan":
+		network.NbMacVlan += 1
+		break
+	case "ipvlan":
+		network.NbIpVlan += 1
+		break
+	default:
+		return
+	}
 }
