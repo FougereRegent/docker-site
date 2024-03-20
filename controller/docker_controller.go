@@ -53,3 +53,7 @@ func GetResumeElement(c *gin.Context) {
 		return
 	}
 }
+
+func GetContainers(c *gin.Context) {
+	c.HTML(http.StatusOK, "containers.html", nil)
+}

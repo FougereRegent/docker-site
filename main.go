@@ -30,6 +30,7 @@ func main() {
 	{
 		router.GET("/home", controller.HomePage)
 		router.GET("/docker/:element", controller.GetResumeElement)
+		router.GET("/containers", controller.GetContainers)
 	}
 	router.Run("0.0.0.0:8080")
 }
