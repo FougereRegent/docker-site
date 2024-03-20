@@ -119,3 +119,27 @@ func GetNetworkResume() (*dto.NetworkResume, error) {
 
 	return &resume, nil
 }
+
+func GetContainersList() ([]dto.ContainerDTO, error) {
+	var dtoDockerContainer []dto.DockerContainer
+
+	client := helper.MakeRequest(helper.GET)
+	result, err := client.Send(NETWORK_LIST, http.StatusOK)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(result, &dtoDockerContainer)
+	if err != nil {
+		return nil, err
+	}
+
+	dtoContainer := make([]dto.ContainerDTO, cap(dtoDockerContainer))
+
+	for index, value := range dtoDockerContainer {
+		dtoContainer[index] = value.TransformToContainerDTO()
+	}
+
+	return dtoContainer, nil
+}
