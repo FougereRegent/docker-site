@@ -48,6 +48,7 @@ type DockerContainer struct {
 	ImageId string       `json:"ImageId"`
 	State   string       `json:"State"`
 	Status  string       `json:"Status"`
+	Command string       `json:"Command"`
 	Ports   []DockerPort `json:"Ports"`
 }
 
@@ -92,6 +93,14 @@ type DockerVolume struct {
 	} `json:"Volumes"`
 }
 
+type ContainerDTO struct {
+	Hash    string
+	Name    string
+	Image   string
+	Command string
+	Statut  string
+}
+
 func (c *DockerImage) ConvertSize() float64 {
 	return float64(c.Size) / 10e09
 }
@@ -119,4 +128,15 @@ func (c *DockerNetwork) CountElement(network *NetworkResume) {
 	default:
 		return
 	}
+}
+
+func (c *DockerContainer) TransformToContainerDTO() ContainerDTO {
+	result := ContainerDTO{
+		Hash:    c.Id,
+		Name:    c.Names[0],
+		Image:   c.Image,
+		Statut:  c.State,
+		Command: c.Command,
+	}
+	return result
 }
