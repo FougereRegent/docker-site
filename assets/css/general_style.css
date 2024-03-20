@@ -41,6 +41,23 @@ a {
   background-color: var(--background-menu-item-color);
 }
 
+#main-content {
+  background-color: var(--background-dashboard);
+  flex: 4;
+  padding-left: 1rem;
+  padding-top: 1rem;
+}
+
+#main {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+}
+
+#navigation {
+  flex: 1;
+}
+
 #navigation-list {
   flex: 1;
   margin: 0;
