@@ -16,7 +16,7 @@ func main() {
 	initDb()
 
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("templates/*.html")
 	router.Static("/assets", "./assets")
 
 	store := cookie.NewStore([]byte("secret"))

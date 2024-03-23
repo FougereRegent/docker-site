@@ -1,10 +1,12 @@
 package controller
 
 import (
+	"docker-site/dto"
 	"docker-site/service"
 	"fmt"
 	"net/http"
 
+	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -61,7 +63,18 @@ func GetContainers(c *gin.Context) {
 		return
 	}
 
+	result := make([][]interface{}, len(containers))
+	for index, value := range containers {
+		result[index] = structs.Values(&value)
+	}
+
+	headers := structs.Names(containers[0])
+	fmt.Println(result[0])
+
 	c.HTML(http.StatusOK, "containers.html", gin.H{
-		"containers": containers,
+		"tableau": dto.TabDTO{
+			Headers: headers,
+			Values:  result,
+		},
 	})
 }

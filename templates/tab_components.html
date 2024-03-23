@@ -1,0 +1,18 @@
+<div>
+  <table>
+    <tr>
+      {{range .tableau.Headers}}
+      <td>
+      <th>{{.}}</th>
+      </td>
+      {{end}}
+    </tr>
+    {{range .tableau.Values}}
+    <tr>
+      {{range .}}
+      <td>{{.}}</td>
+      {{end}}
+    </tr>
+    {{end}}
+  </table>
+</div>
