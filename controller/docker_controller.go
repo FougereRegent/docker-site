@@ -55,5 +55,13 @@ func GetResumeElement(c *gin.Context) {
 }
 
 func GetContainers(c *gin.Context) {
-	c.HTML(http.StatusOK, "containers.html", nil)
+	containers, err := service.GetContainersList()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	c.HTML(http.StatusOK, "containers.html", gin.H{
+		"containers": containers,
+	})
 }

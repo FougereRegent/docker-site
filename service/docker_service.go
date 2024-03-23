@@ -4,6 +4,7 @@ import (
 	"docker-site/dto"
 	"docker-site/helper"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -124,7 +125,7 @@ func GetContainersList() ([]dto.ContainerDTO, error) {
 	var dtoDockerContainer []dto.DockerContainer
 
 	client := helper.MakeRequest(helper.GET)
-	result, err := client.Send(NETWORK_LIST, http.StatusOK)
+	result, err := client.Send(CONTAINER_LIST, http.StatusOK)
 
 	if err != nil {
 		return nil, err
@@ -132,10 +133,10 @@ func GetContainersList() ([]dto.ContainerDTO, error) {
 
 	err = json.Unmarshal(result, &dtoDockerContainer)
 	if err != nil {
+		fmt.Println(err)
 		return nil, err
 	}
-
-	dtoContainer := make([]dto.ContainerDTO, cap(dtoDockerContainer))
+	dtoContainer := make([]dto.ContainerDTO, len(dtoDockerContainer))
 
 	for index, value := range dtoDockerContainer {
 		dtoContainer[index] = value.TransformToContainerDTO()
