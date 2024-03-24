@@ -62,7 +62,11 @@ func GoToPageDisplay(c *gin.Context) {
 	case CONTAINER:
 		c.HTML(http.StatusOK, "containers.html", nil)
 		break
+	default:
+		c.Redirect(http.StatusPermanentRedirect, "./assets/hmlt/NotFound.html")
+		break
 	}
+
 }
 
 func GetContainers(c *gin.Context) {
@@ -82,8 +86,9 @@ func GetContainers(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "tab_component.html", gin.H{
 		"tableau": dto.TabDTO{
-			Headers: headers,
-			Values:  result,
+			UrlToScan: "/docker/containers",
+			Headers:   headers,
+			Values:    result,
 		},
 	})
 }

@@ -1,6 +1,6 @@
 <div class="resume-element-container" {{if eq .Type "Container" }} hx-get="/docker/resume/containers" {{end}} {{if eq
   .Type "Image" }} hx-get="/docker/resume/images" {{end}} {{if eq .Type "Network" }} hx-get="/docker/resume/networks"
-  {{end}} {{if eq .Type "Volume" }} hx-get="/docker/resume/volumes" {{end}} hx-trigger="every 5s" hx-swap="outerHTML"
+  {{end}} {{if eq .Type "Volume" }} hx-get="/docker/resume/volumes" {{end}} hx-trigger="every 2s" hx-swap="outerHTML"
   hx-target="this">
   <h2>{{.Type}}</h2>
   <div>

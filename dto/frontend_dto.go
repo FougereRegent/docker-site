@@ -6,6 +6,7 @@ type UserFrontDTO struct {
 }
 
 type TabDTO struct {
-	Headers []string
-	Values  [][]interface{}
+	UrlToScan string
+	Headers   []string
+	Values    [][]interface{}
 }

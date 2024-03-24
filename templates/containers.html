@@ -12,8 +12,7 @@
     </div>
     <div id="main-content">
       <h1>Containers</h1>
-      <div id="tab-container" hx-get="/containers">
-        {{template "tab_components.html" .}}
+      <div id="tab-container" hx-get="/docker/containers" hx-trigger="load">
       </div>
     </div>
   </div>

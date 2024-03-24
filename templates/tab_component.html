@@ -1,4 +1,4 @@
-<div hx-get="/containers" hx-trigger="every 5s" hx-swap="outerHTML" hx-taget="this">
+<div hx-get="{{.tableau.UrlToScan}}" hx-trigger="every 2s" hx-swap="outerHTML" hx-taget="this">
   <table class="fl-table">
     <thead>
       {{range .tableau.Headers}}
