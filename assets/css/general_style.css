@@ -1,13 +1,14 @@
 :root {
-  --background-menu-color: 2d6ef0;
-  --background-menu-item-color: 4c83f3;
+  --white: white;
+  --light-blue: #2d6ef0;
+  --background-menu-item-color: #4c83f3;
 }
 
 
 nav {
   display: flex;
   flex-direction: column;
-  background-color: var(--background-menu-color);
+  background-color: var(--light-blue);
   height: 100%;
 }
 
@@ -39,6 +40,48 @@ a {
 
 .menu-link:hover {
   background-color: var(--background-menu-item-color);
+}
+
+.table-wrapper{
+    margin: 10px 70px 70px;
+    box-shadow: 0px 35px 50px rgba( 0, 0, 0, 0.2 );
+}
+
+.fl-table {
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: wrap;
+    background-color: white;
+}
+
+.fl-table td, .fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 12px;
+}
+
+.fl-table thead th {
+    color: #ffffff;
+    background: var(--light-blue);
+}
+
+
+.fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
 }
 
 #main-content {

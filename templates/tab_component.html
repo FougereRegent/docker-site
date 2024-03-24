@@ -1,0 +1,18 @@
+<div>
+  <table class="fl-table">
+    <thead>
+      {{range .tableau.Headers}}
+      <th scope="col">{{.}}</th>
+      {{end}}
+    </thead>
+    <tbody>
+      {{range .tableau.Values}}
+      <tr>
+        {{range .}}
+        <td>{{.}}</td>
+        {{end}}
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+</div>
