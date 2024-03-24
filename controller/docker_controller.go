@@ -11,15 +11,14 @@ import (
 )
 
 const (
-	CONTAINER string = "container"
-	IMAGE     string = "image"
-	VOLUME    string = "volume"
-	NETWORK   string = "network"
+	CONTAINER string = "containers"
+	IMAGE     string = "images"
+	VOLUME    string = "volumes"
+	NETWORK   string = "networks"
 )
 
 func GetResumeElement(c *gin.Context) {
 	typeElement := c.Param("element")
-	fmt.Println(typeElement)
 
 	switch typeElement {
 	case CONTAINER:
@@ -56,6 +55,16 @@ func GetResumeElement(c *gin.Context) {
 	}
 }
 
+func GoToPageDisplay(c *gin.Context) {
+	typePage := c.Param("page")
+
+	switch typePage {
+	case CONTAINER:
+		c.HTML(http.StatusOK, "containers.html", nil)
+		break
+	}
+}
+
 func GetContainers(c *gin.Context) {
 	containers, err := service.GetContainersList()
 	if err != nil {
@@ -71,7 +80,7 @@ func GetContainers(c *gin.Context) {
 	headers := structs.Names(containers[0])
 	fmt.Println(result[0])
 
-	c.HTML(http.StatusOK, "containers.html", gin.H{
+	c.HTML(http.StatusOK, "tab_component.html", gin.H{
 		"tableau": dto.TabDTO{
 			Headers: headers,
 			Values:  result,

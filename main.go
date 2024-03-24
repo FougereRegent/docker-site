@@ -30,8 +30,9 @@ func main() {
 	router.Use(middleware.AuthMiddleware)
 	{
 		router.GET("/home", controller.HomePage)
-		router.GET("/docker/:element", controller.GetResumeElement)
-		router.GET("/containers", controller.GetContainers)
+		router.GET("/docker/resume/:element", controller.GetResumeElement)
+		router.GET("/docker/containers", controller.GetContainers)
+		router.GET("/:page", controller.GoToPageDisplay)
 	}
 	router.Run("0.0.0.0:8080")
 }

@@ -1,6 +1,7 @@
-<div class="resume-element-container" {{if eq .Type "Container" }} hx-get="/docker/container" {{end}} {{if eq
-  .Type "Image" }} hx-get="/docker/image" {{end}} {{if eq .Type "Network" }} hx-get="/docker/network" {{end}} {{if eq
-  .Type "Volume" }} hx-get="/docker/volume" {{end}} hx-trigger="every 5s" hx-swap="outerHTML" hx-target="this">
+<div class="resume-element-container" {{if eq .Type "Container" }} hx-get="/docker/resume/containers" {{end}} {{if eq
+  .Type "Image" }} hx-get="/docker/resume/images" {{end}} {{if eq .Type "Network" }} hx-get="/docker/resume/networks"
+  {{end}} {{if eq .Type "Volume" }} hx-get="/docker/resume/volumes" {{end}} hx-trigger="every 5s" hx-swap="outerHTML"
+  hx-target="this">
   <h2>{{.Type}}</h2>
   <div>
     {{if eq .Type "Container" }}
