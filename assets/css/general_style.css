@@ -62,6 +62,7 @@ a {
 .fl-table td, .fl-table th {
     text-align: center;
     padding: 8px;
+    font-size: 16px;
 }
 
 .fl-table td {
@@ -82,6 +83,11 @@ a {
 
 .fl-table tr:nth-child(even) {
     background: #F8F8F8;
+}
+
+.table-container {
+  overflow-y: scroll;
+  height: 80%;
 }
 
 #main-content {

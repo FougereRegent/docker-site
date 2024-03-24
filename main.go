@@ -32,8 +32,12 @@ func main() {
 		router.GET("/home", controller.HomePage)
 		router.GET("/docker/resume/:element", controller.GetResumeElement)
 		router.GET("/docker/containers", controller.GetContainers)
+		router.GET("/docker/networks", controller.GetNetworks)
+		router.GET("/docker/images", controller.GetImages)
+		router.GET("/docker/volumes", controller.GetVolumes)
 		router.GET("/:page", controller.GoToPageDisplay)
 	}
+
 	router.Run("0.0.0.0:8080")
 }
 

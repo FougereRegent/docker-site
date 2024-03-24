@@ -1,6 +1,8 @@
 package dto
 
 import (
+	"docker-site/helper"
+	"strings"
 	"time"
 )
 
@@ -103,6 +105,14 @@ type ContainerDTO struct {
 	Statut  string
 }
 
+type ImageDTO struct {
+	Repository string `structs:"REPOSITORY"`
+	Tag        string `structs:"TAG"`
+	ImageID    string `structs:"IMAGE ID"`
+	Created    string `structs:"CREATED"`
+	Size       string `structs:"SIZE"`
+}
+
 func (c *DockerImage) ConvertSize() float64 {
 	return float64(c.Size) / 10e09
 }
@@ -139,6 +149,29 @@ func (c *DockerContainer) TransformToContainerDTO() ContainerDTO {
 		Image:   c.Image,
 		Statut:  c.State,
 		Command: c.Command,
+	}
+	return result
+}
+
+func (c *DockerImage) TransformToImageDTO() ImageDTO {
+	var tag string = "none"
+	var repository string = "none"
+	var repo []string
+	if len(c.RepoTags) >= 1 {
+		repo = strings.Split(c.RepoTags[0], ":")
+	}
+
+	if len(repo) == 2 {
+		repository = repo[0]
+		tag = repo[1]
+	}
+
+	result := ImageDTO{
+		Repository: repository,
+		Tag:        tag,
+		ImageID:    c.Id[0:13],
+		Size:       helper.OctalToStringFormat(c.Size),
+		Created:    "",
 	}
 	return result
 }

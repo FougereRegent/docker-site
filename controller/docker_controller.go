@@ -3,7 +3,6 @@ package controller
 import (
 	"docker-site/dto"
 	"docker-site/service"
-	"fmt"
 	"net/http"
 
 	"github.com/fatih/structs"
@@ -62,6 +61,9 @@ func GoToPageDisplay(c *gin.Context) {
 	case CONTAINER:
 		c.HTML(http.StatusOK, "containers.html", nil)
 		break
+	case IMAGE:
+		c.HTML(http.StatusOK, "images.html", nil)
+		break
 	default:
 		c.Redirect(http.StatusPermanentRedirect, "./assets/hmlt/NotFound.html")
 		break
@@ -82,7 +84,6 @@ func GetContainers(c *gin.Context) {
 	}
 
 	headers := structs.Names(containers[0])
-	fmt.Println(result[0])
 
 	c.HTML(http.StatusOK, "tab_component.html", gin.H{
 		"tableau": dto.TabDTO{
@@ -91,4 +92,34 @@ func GetContainers(c *gin.Context) {
 			Values:    result,
 		},
 	})
+}
+
+func GetImages(c *gin.Context) {
+	images, err := service.GetImagesList()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	result := make([][]interface{}, len(images))
+	for index, value := range images {
+		result[index] = structs.Values(&value)
+	}
+
+	headers := structs.Names(images[0])
+	c.HTML(http.StatusOK, "tab_component.html", gin.H{
+		"tableau": dto.TabDTO{
+			UrlToScan: "/docker/images",
+			Headers:   headers,
+			Values:    result,
+		},
+	})
+}
+
+func GetNetworks(c *gin.Context) {
+
+}
+
+func GetVolumes(c *gin.Context) {
+
 }

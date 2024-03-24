@@ -144,3 +144,36 @@ func GetContainersList() ([]dto.ContainerDTO, error) {
 
 	return dtoContainer, nil
 }
+
+func GetImagesList() ([]dto.ImageDTO, error) {
+	var dtoDockerImages []dto.DockerImage
+
+	client := helper.MakeRequest(helper.GET)
+	result, err := client.Send(IMAGES_LIST, http.StatusOK)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	if err = json.Unmarshal(result, &dtoDockerImages); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	dtoImages := make([]dto.ImageDTO, len(dtoDockerImages))
+
+	for index, value := range dtoDockerImages {
+		dtoImages[index] = value.TransformToImageDTO()
+	}
+
+	return dtoImages, nil
+}
+
+func GetNetworksList() {
+
+}
+
+func GetVolumesList() {
+
+}
