@@ -116,10 +116,12 @@ func GetImages(c *gin.Context) {
 	})
 }
 
+// TODO : Implements few later, it's use to get all networks
 func GetNetworks(c *gin.Context) {
 
 }
 
+// TODO : Implements few later, it's use to get all Volumes
 func GetVolumes(c *gin.Context) {
 
 }
