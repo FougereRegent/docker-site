@@ -2,6 +2,7 @@ package service
 
 import (
 	"docker-site/dto"
+	"docker-site/dto/docker"
 	"docker-site/helper"
 	"encoding/json"
 	"fmt"
@@ -17,8 +18,8 @@ const (
 )
 
 func GetContainerResume() (*dto.ContainerResume, error) {
-	var dtoContainer []dto.DockerContainer
-	var dtoRunningContainer []dto.DockerContainer
+	var dtoContainer []docker.DockerContainer
+	var dtoRunningContainer []docker.DockerContainer
 	client := helper.MakeRequest(helper.GET)
 	resultContainers, err := client.Send(CONTAINER_LIST, http.StatusOK)
 	resultRunningContainers, err := client.Send(CONTAINER_LIST_RUNNING, http.StatusOK)
@@ -44,7 +45,7 @@ func GetContainerResume() (*dto.ContainerResume, error) {
 }
 
 func GetImageResume() (*dto.ImageResume, error) {
-	var dtoImage []dto.DockerImage
+	var dtoImage []docker.DockerImage
 	var totalSize float64
 	client := helper.MakeRequest(helper.GET)
 	result, err := client.Send(IMAGES_LIST, http.StatusOK)
@@ -74,7 +75,7 @@ func GetImageResume() (*dto.ImageResume, error) {
 }
 
 func GetVolumeResume() (*dto.VolumeResume, error) {
-	var dtoVolume dto.DockerVolume
+	var dtoVolume docker.DockerVolume
 	var resume dto.VolumeResume
 
 	client := helper.MakeRequest(helper.GET)
@@ -97,7 +98,7 @@ func GetVolumeResume() (*dto.VolumeResume, error) {
 }
 
 func GetNetworkResume() (*dto.NetworkResume, error) {
-	var dtoNetwork []dto.DockerNetwork
+	var dtoNetwork []docker.DockerNetwork
 	var resume dto.NetworkResume
 
 	client := helper.MakeRequest(helper.GET)
@@ -121,8 +122,8 @@ func GetNetworkResume() (*dto.NetworkResume, error) {
 	return &resume, nil
 }
 
-func GetContainersList() ([]dto.ContainerDTO, error) {
-	var dtoDockerContainer []dto.DockerContainer
+func GetContainersList() ([]docker.ContainerDTO, error) {
+	var dtoDockerContainer []docker.DockerContainer
 
 	client := helper.MakeRequest(helper.GET)
 	result, err := client.Send(CONTAINER_LIST, http.StatusOK)
@@ -136,7 +137,7 @@ func GetContainersList() ([]dto.ContainerDTO, error) {
 		fmt.Println(err)
 		return nil, err
 	}
-	dtoContainer := make([]dto.ContainerDTO, len(dtoDockerContainer))
+	dtoContainer := make([]docker.ContainerDTO, len(dtoDockerContainer))
 
 	for index, value := range dtoDockerContainer {
 		dtoContainer[index] = value.TransformToContainerDTO()
@@ -145,8 +146,8 @@ func GetContainersList() ([]dto.ContainerDTO, error) {
 	return dtoContainer, nil
 }
 
-func GetImagesList() ([]dto.ImageDTO, error) {
-	var dtoDockerImages []dto.DockerImage
+func GetImagesList() ([]docker.ImageDTO, error) {
+	var dtoDockerImages []docker.DockerImage
 
 	client := helper.MakeRequest(helper.GET)
 	result, err := client.Send(IMAGES_LIST, http.StatusOK)
@@ -161,7 +162,7 @@ func GetImagesList() ([]dto.ImageDTO, error) {
 		return nil, err
 	}
 
-	dtoImages := make([]dto.ImageDTO, len(dtoDockerImages))
+	dtoImages := make([]docker.ImageDTO, len(dtoDockerImages))
 
 	for index, value := range dtoDockerImages {
 		dtoImages[index] = value.TransformToImageDTO()
