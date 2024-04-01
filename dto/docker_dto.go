@@ -145,7 +145,7 @@ func (c *DockerNetwork) CountElement(network *NetworkResume) {
 func (c *DockerContainer) TransformToContainerDTO() ContainerDTO {
 	result := ContainerDTO{
 		Hash:    c.Id[0:13],
-		Name:    c.Names[0],
+		Name:    c.Names[0][1:len(c.Names[0])],
 		Image:   c.Image,
 		Statut:  c.State,
 		Command: c.Command,
