@@ -14,13 +14,13 @@
     <div id="main-content">
       <h1>Dashboard</h1>
       <div id="dashboard">
-        <div hx-get="/docker/container" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
+        <div hx-get="/docker/resume/containers" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
         </div>
-        <div hx-get="/docker/image" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
+        <div hx-get="/docker/resume/images" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
         </div>
-        <div hx-get="/docker/network" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
+        <div hx-get="/docker/resume/networks" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
         </div>
-        <div hx-get="/docker/volume" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
+        <div hx-get="/docker/resume/volumes" hx-trigger="load" hx-swap="outerHTML" hx-target="this">
         </div>
       </div>
     </div>

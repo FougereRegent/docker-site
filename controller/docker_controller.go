@@ -1,23 +1,23 @@
 package controller
 
 import (
+	"docker-site/dto"
 	"docker-site/service"
-	"fmt"
 	"net/http"
 
+	"github.com/fatih/structs"
 	"github.com/gin-gonic/gin"
 )
 
 const (
-	CONTAINER string = "container"
-	IMAGE     string = "image"
-	VOLUME    string = "volume"
-	NETWORK   string = "network"
+	CONTAINER string = "containers"
+	IMAGE     string = "images"
+	VOLUME    string = "volumes"
+	NETWORK   string = "networks"
 )
 
 func GetResumeElement(c *gin.Context) {
 	typeElement := c.Param("element")
-	fmt.Println(typeElement)
 
 	switch typeElement {
 	case CONTAINER:
@@ -52,4 +52,74 @@ func GetResumeElement(c *gin.Context) {
 		c.HTML(http.StatusNotFound, "not_found.html", nil)
 		return
 	}
+}
+
+func GoToPageDisplay(c *gin.Context) {
+	typePage := c.Param("page")
+
+	switch typePage {
+	case CONTAINER:
+		c.HTML(http.StatusOK, "containers.html", nil)
+		break
+	case IMAGE:
+		c.HTML(http.StatusOK, "images.html", nil)
+		break
+	default:
+		c.Redirect(http.StatusPermanentRedirect, "./assets/hmlt/NotFound.html")
+		break
+	}
+
+}
+
+func GetContainers(c *gin.Context) {
+	containers, err := service.GetContainersList()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	result := make([][]interface{}, len(containers))
+	for index, value := range containers {
+		result[index] = structs.Values(&value)
+	}
+
+	headers := structs.Names(containers[0])
+
+	c.HTML(http.StatusOK, "tab_component.html", gin.H{
+		"tableau": dto.TabDTO{
+			UrlToScan: "/docker/containers",
+			Headers:   headers,
+			Values:    result,
+		},
+	})
+}
+
+func GetImages(c *gin.Context) {
+	images, err := service.GetImagesList()
+	if err != nil {
+		c.Status(http.StatusInternalServerError)
+		return
+	}
+
+	result := make([][]interface{}, len(images))
+	for index, value := range images {
+		result[index] = structs.Values(&value)
+	}
+
+	headers := structs.Names(images[0])
+	c.HTML(http.StatusOK, "tab_component.html", gin.H{
+		"tableau": dto.TabDTO{
+			UrlToScan: "/docker/images",
+			Headers:   headers,
+			Values:    result,
+		},
+	})
+}
+
+func GetNetworks(c *gin.Context) {
+
+}
+
+func GetVolumes(c *gin.Context) {
+
 }

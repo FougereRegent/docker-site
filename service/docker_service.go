@@ -4,6 +4,7 @@ import (
 	"docker-site/dto"
 	"docker-site/helper"
 	"encoding/json"
+	"fmt"
 	"net/http"
 )
 
@@ -118,4 +119,61 @@ func GetNetworkResume() (*dto.NetworkResume, error) {
 	}
 
 	return &resume, nil
+}
+
+func GetContainersList() ([]dto.ContainerDTO, error) {
+	var dtoDockerContainer []dto.DockerContainer
+
+	client := helper.MakeRequest(helper.GET)
+	result, err := client.Send(CONTAINER_LIST, http.StatusOK)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(result, &dtoDockerContainer)
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+	dtoContainer := make([]dto.ContainerDTO, len(dtoDockerContainer))
+
+	for index, value := range dtoDockerContainer {
+		dtoContainer[index] = value.TransformToContainerDTO()
+	}
+
+	return dtoContainer, nil
+}
+
+func GetImagesList() ([]dto.ImageDTO, error) {
+	var dtoDockerImages []dto.DockerImage
+
+	client := helper.MakeRequest(helper.GET)
+	result, err := client.Send(IMAGES_LIST, http.StatusOK)
+
+	if err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	if err = json.Unmarshal(result, &dtoDockerImages); err != nil {
+		fmt.Println(err)
+		return nil, err
+	}
+
+	dtoImages := make([]dto.ImageDTO, len(dtoDockerImages))
+
+	for index, value := range dtoDockerImages {
+		dtoImages[index] = value.TransformToImageDTO()
+	}
+
+	return dtoImages, nil
+}
+
+func GetNetworksList() {
+
+}
+
+func GetVolumesList() {
+
 }

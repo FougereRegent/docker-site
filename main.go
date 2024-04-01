@@ -5,6 +5,7 @@ import (
 	"docker-site/entity"
 	"docker-site/helper"
 	"docker-site/middleware"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -15,7 +16,7 @@ func main() {
 	initDb()
 
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("templates/*.html")
 	router.Static("/assets", "./assets")
 
 	store := cookie.NewStore([]byte("secret"))
@@ -29,8 +30,14 @@ func main() {
 	router.Use(middleware.AuthMiddleware)
 	{
 		router.GET("/home", controller.HomePage)
-		router.GET("/docker/:element", controller.GetResumeElement)
+		router.GET("/docker/resume/:element", controller.GetResumeElement)
+		router.GET("/docker/containers", controller.GetContainers)
+		router.GET("/docker/networks", controller.GetNetworks)
+		router.GET("/docker/images", controller.GetImages)
+		router.GET("/docker/volumes", controller.GetVolumes)
+		router.GET("/:page", controller.GoToPageDisplay)
 	}
+
 	router.Run("0.0.0.0:8080")
 }
 

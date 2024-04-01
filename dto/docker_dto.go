@@ -1,6 +1,10 @@
 package dto
 
-import "time"
+import (
+	"docker-site/helper"
+	"strings"
+	"time"
+)
 
 const (
 	CONTAINER_TYPE ElementType = "Container"
@@ -48,6 +52,7 @@ type DockerContainer struct {
 	ImageId string       `json:"ImageId"`
 	State   string       `json:"State"`
 	Status  string       `json:"Status"`
+	Command string       `json:"Command"`
 	Ports   []DockerPort `json:"Ports"`
 }
 
@@ -92,6 +97,22 @@ type DockerVolume struct {
 	} `json:"Volumes"`
 }
 
+type ContainerDTO struct {
+	Hash    string
+	Name    string
+	Image   string
+	Command string
+	Statut  string
+}
+
+type ImageDTO struct {
+	Repository string `structs:"REPOSITORY"`
+	Tag        string `structs:"TAG"`
+	ImageID    string `structs:"IMAGE ID"`
+	Created    string `structs:"CREATED"`
+	Size       string `structs:"SIZE"`
+}
+
 func (c *DockerImage) ConvertSize() float64 {
 	return float64(c.Size) / 10e09
 }
@@ -119,4 +140,38 @@ func (c *DockerNetwork) CountElement(network *NetworkResume) {
 	default:
 		return
 	}
+}
+
+func (c *DockerContainer) TransformToContainerDTO() ContainerDTO {
+	result := ContainerDTO{
+		Hash:    c.Id[0:13],
+		Name:    c.Names[0][1:len(c.Names[0])],
+		Image:   c.Image,
+		Statut:  c.State,
+		Command: c.Command,
+	}
+	return result
+}
+
+func (c *DockerImage) TransformToImageDTO() ImageDTO {
+	var tag string = "none"
+	var repository string = "none"
+	var repo []string
+	if len(c.RepoTags) >= 1 {
+		repo = strings.Split(c.RepoTags[0], ":")
+	}
+
+	if len(repo) == 2 {
+		repository = repo[0]
+		tag = repo[1]
+	}
+
+	result := ImageDTO{
+		Repository: repository,
+		Tag:        tag,
+		ImageID:    c.Id[0:13],
+		Size:       helper.OctalToStringFormat(c.Size),
+		Created:    "",
+	}
+	return result
 }

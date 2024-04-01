@@ -1,0 +1,18 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+</head>
+
+<body>
+  <div id="main">
+    {{template "bar_menue.html" .}}
+    <div id="main-content">
+      <h1>Images</h1>
+      <div id="tab-container" hx-get="/docker/images" hx-trigger="load">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

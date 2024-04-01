@@ -1,0 +1,21 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+  <link rel="stylesheet" href="./assets/css/containers.css" />
+</head>
+
+<body>
+  <div id="main">
+    <div id="navigation">
+      {{template "bar_menue.html" .}}
+    </div>
+    <div id="main-content">
+      <h1>Containers</h1>
+      <div id="tab-container" hx-get="/docker/containers" hx-trigger="load">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
