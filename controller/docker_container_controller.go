@@ -2,8 +2,9 @@ package controller
 
 import (
 	"docker-site/service"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 //This files groups every containers controller like this :
@@ -44,6 +45,7 @@ func InspectContainer(c *gin.Context) {
 	_, err := service.DockerInspect(containerId)
 
 	if err != nil {
+		c.Status(http.StatusNotFound)
 		return
 	}
 

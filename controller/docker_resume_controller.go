@@ -78,9 +78,9 @@ func GetContainers(c *gin.Context) {
 		return
 	}
 
-	result := make([][]interface{}, len(containers))
+	result := make([]map[string]interface{}, len(containers))
 	for index, value := range containers {
-		result[index] = structs.Values(&value)
+		result[index] = structs.Map(&value)
 	}
 
 	headers := structs.Names(containers[0])
@@ -101,9 +101,9 @@ func GetImages(c *gin.Context) {
 		return
 	}
 
-	result := make([][]interface{}, len(images))
+	result := make([]map[string]interface{}, len(images))
 	for index, value := range images {
-		result[index] = structs.Values(&value)
+		result[index] = structs.Map(&value)
 	}
 
 	headers := structs.Names(images[0])

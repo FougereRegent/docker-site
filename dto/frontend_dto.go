@@ -8,5 +8,5 @@ type UserFrontDTO struct {
 type TabDTO struct {
 	UrlToScan string
 	Headers   []string
-	Values    [][]interface{}
+	Values    []map[string]interface{}
 }

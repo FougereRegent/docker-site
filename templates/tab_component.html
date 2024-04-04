@@ -1,16 +1,22 @@
 <div class="table-container" hx-get="{{.tableau.UrlToScan}}" hx-trigger="every 1200s" hx-swap="outerHTML"
   hx-taget="this">
   <table class="fl-table">
+    {{$Headers := .tableau.Headers}}
     <thead>
-      {{range .tableau.Headers}}
+      {{range $Headers}}
       <th scope="col">{{.}}</th>
       {{end}}
     </thead>
     <tbody>
       {{range .tableau.Values}}
+      {{$Value := .}}
       <tr>
-        {{range .}}
-        <td>{{.}}</td>
+        {{range $Headers}}
+        {{if eq . "Hash"}}
+        <td><a href="/docker/container/{{index $Value .}}">{{index $Value .}}</a></td>
+        {{else}}
+        <td>{{index $Value .}}</td>
+        {{end}}
         {{end}}
       </tr>
       {{end}}
