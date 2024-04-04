@@ -35,6 +35,7 @@ func main() {
 		router.GET("/docker/networks", controller.GetNetworks)
 		router.GET("/docker/images", controller.GetImages)
 		router.GET("/docker/volumes", controller.GetVolumes)
+		router.GET("/docker/container/:id", controller.InspectContainer)
 		router.GET("/:page", controller.GoToPageDisplay)
 	}
 

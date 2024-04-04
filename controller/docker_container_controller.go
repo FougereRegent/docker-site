@@ -1,6 +1,10 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"docker-site/service"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 //This files groups every containers controller like this :
 // - Delete
@@ -32,4 +36,16 @@ func StopContainer(c *gin.Context) {
 // TODO : Implements restarting container in docker engine
 func RestartContainer(c *gin.Context) {
 
+}
+
+// TODO : Implements inspect container
+func InspectContainer(c *gin.Context) {
+	containerId := c.Param("id")
+	_, err := service.DockerInspect(containerId)
+
+	if err != nil {
+		return
+	}
+
+	c.HTML(http.StatusOK, "container_inspect.html", nil)
 }
