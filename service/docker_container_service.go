@@ -1,7 +1,9 @@
 package service
 
 import (
+	"docker-site/dto/docker"
 	"docker-site/helper"
+	"encoding/json"
 	"net/http"
 	"strings"
 )
@@ -46,4 +48,24 @@ func DockerHandle(idContainer string, command DockerCommand) error {
 	}
 
 	return nil
+}
+
+// TODO : Ajout de l'inspect de containers
+func DockerInspect(idContainer string) (*docker.DockerContainerInspect, error) {
+	var containerInspect *docker.DockerContainerInspect
+	client := helper.MakeRequest(helper.GET)
+	url := strings.Replace(CONTAINER_INSPECT, ":id", idContainer, 1)
+	result, err := client.Send(url, http.StatusOK)
+
+	if err != nil {
+		return nil, err
+	}
+
+	err = json.Unmarshal(result, containerInspect)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return containerInspect, nil
 }
