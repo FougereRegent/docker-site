@@ -1,6 +1,10 @@
 package service
 
-import "docker-site/helper"
+import (
+	"docker-site/helper"
+	"net/http"
+	"strings"
+)
 
 const (
 	CONTAINER_INSPECT string = "/containers/:id/json"
@@ -21,34 +25,25 @@ const (
 	PAUSE
 )
 
+var DICT_COMMAND = map[DockerCommand]string{
+	START:   CONTAINER_START,
+	STOP:    CONTAINER_STOP,
+	PAUSE:   CONTAINER_PAUSE,
+	RESTART: CONTAINER_RESTART,
+	KILL:    CONTAINER_KILL,
+}
+
 type DockerCommand int
 
 // TODO: Gestions des containers : Start, Kill, Pause, Stop, Restart
 func DockerHandle(idContainer string, command DockerCommand) error {
+	client := helper.MakeRequest(helper.POST)
+	url := strings.Replace(DICT_COMMAND[command], ":id", idContainer, 1)
+	_, err := client.Send(url, http.StatusNoContent)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
-}
-
-// TODO: Start docker container
-func startDocker(idContainer string) {
-	client := helper.MakeRequest(helper.GET)
-}
-
-// TODO: Stop docker container
-func stopDocker(idContainer string) {
-
-}
-
-// TODO: Restart docker container
-func restartDocker(idContainer string) {
-
-}
-
-// TODO: Kill docker container
-func killDocker(idContainer string) {
-
-}
-
-// TODO: Pause docker container
-func pauseDocker(idContainer string) {
-
 }
