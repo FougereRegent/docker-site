@@ -12,10 +12,16 @@
   margin-left: 0.5rem;
 }
 
-#general-info {
-  flex-direction: column;
+#panel-info {
+  flex-direction: row;
+  justify-content: space-between;
 }
 
-#general-info, .info {
+#general-info {
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#general-info, #panel-info, .info {
   display: flex;
 }

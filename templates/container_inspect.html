@@ -12,35 +12,48 @@
     </div>
     <div id="main-content">
       <h1>Inspect Container</h1>
-      <div id="general-info">
-        <div class="info">
-          <p>Id :</p>
-          <p>{{.Id}}</p>
+      <div id="panel-info">
+        <div id="general-info">
+          <div class="info">
+            <p>Id :</p>
+            <p>{{.Id}}</p>
+          </div>
+          <div class="info">
+            <p>Name : </p>
+            <p>{{.Name}}</p>
+          </div>
+          <div class="info">
+            <p>Command : </p>
+            <p>{{.Path}}
+              {{range .Args}}
+              {{.}}
+              {{end}}
+            </p>
+          </div>
+          <div class="info">
+            <p>Created at : </p>
+            <p>{{.Created}}</p>
+          </div>
         </div>
-        <div class="info">
-          <p>Name : </p>
-          <p>{{.Name}}</p>
-        </div>
-        <div class="info">
-          <p>Command : </p>
-          <p>{{.Path}}
-            {{range .Args}}
-            {{.}}
-            {{end}}
-          </p>
-        </div>
-        <div class="info">
-          <p>Created at : </p>
-          <p>{{.Created}}</p>
-        </div>
-        <div class="info">
-          <p>Status : </p>
-          <p>{{.State.Status}}</p>
-          <p>{{.Running}}</p>
+        <div id="right-info">
+          <div class="info">
+            <p>Status : </p>
+            <p>{{.State.Status}}</p>
+          </div>
+          <div class="info">
+            <p>Pid : </p>
+            <p>{{.State.PID}}</p>
+          </div>
+          <div class="info">
+            <p>Started At : </p>
+            <p>{{.State.StartedAt}}</p>
+          </div>
+          <div class="info">
+            <p>FinishedAt : </p>
+            <p>{{.State.FinishedAt}}</p>
+          </div>
         </div>
       </div>
-      <p>{{.State}}</p>
-      <p>{{.Mount}}</p>
     </div>
   </div>
 </body>
