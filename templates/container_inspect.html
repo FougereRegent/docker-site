@@ -2,6 +2,7 @@
 
 <head>
   {{template "head.html" .}}
+  <link rel="stylesheet" href="/assets/css/container_inspect.css" />
 </head>
 
 <body>
@@ -11,15 +12,34 @@
     </div>
     <div id="main-content">
       <h1>Inspect Container</h1>
-      <p>{{.Id}}</p>
-      <p>{{.Image}}</p>
-      <p>{{.Name}}</p>
-      <p>{{.Path}}</p>
-      <p>{{.Args}}</p>
-      <p>{{.Created}}</p>
-      <p>{{.State.Status}}</p>
+      <div id="general-info">
+        <div class="info">
+          <p>Id :</p>
+          <p>{{.Id}}</p>
+        </div>
+        <div class="info">
+          <p>Name : </p>
+          <p>{{.Name}}</p>
+        </div>
+        <div class="info">
+          <p>Command : </p>
+          <p>{{.Path}}
+            {{range .Args}}
+            {{.}}
+            {{end}}
+          </p>
+        </div>
+        <div class="info">
+          <p>Created at : </p>
+          <p>{{.Created}}</p>
+        </div>
+        <div class="info">
+          <p>Status : </p>
+          <p>{{.State.Status}}</p>
+          <p>{{.Running}}</p>
+        </div>
+      </div>
       <p>{{.State}}</p>
-      <p>{{.Running}}</p>
       <p>{{.Mount}}</p>
     </div>
   </div>

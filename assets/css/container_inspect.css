@@ -1,0 +1,21 @@
+.info {
+  flex-direction: row;
+  justify-content: start;
+}
+
+.info > p:first-child {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.info > p:nth-child(3) {
+  margin-left: 0.5rem;
+}
+
+#general-info {
+  flex-direction: column;
+}
+
+#general-info, .info {
+  display: flex;
+}
