@@ -2,9 +2,8 @@ package controller
 
 import (
 	"docker-site/service"
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 //This files groups every containers controller like this :
@@ -42,12 +41,12 @@ func RestartContainer(c *gin.Context) {
 // TODO : Implements inspect container
 func InspectContainer(c *gin.Context) {
 	containerId := c.Param("id")
-	_, err := service.DockerInspect(containerId)
+	containerInspect, err := service.DockerInspect(containerId)
 
 	if err != nil {
 		c.Status(http.StatusNotFound)
 		return
 	}
 
-	c.HTML(http.StatusOK, "container_inspect.html", nil)
+	c.HTML(http.StatusOK, "container_inspect.html", containerInspect)
 }

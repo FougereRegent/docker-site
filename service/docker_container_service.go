@@ -50,21 +50,21 @@ func DockerHandle(idContainer string, command DockerCommand) error {
 	return nil
 }
 
-func DockerInspect(idContainer string) (docker.DockerContainerInspect, error) {
+func DockerInspect(idContainer string) (*docker.ContainerInspectDTO, error) {
 	var containerInspect docker.DockerContainerInspect
 	client := helper.MakeRequest(helper.GET)
 	url := strings.Replace(CONTAINER_INSPECT, ":id", idContainer, 1)
 	result, err := client.Send(url, http.StatusOK)
 
 	if err != nil {
-		return docker.DockerContainerInspect{}, err
+		return nil, err
 	}
 
 	err = json.Unmarshal(result, &containerInspect)
 
 	if err != nil {
-		return docker.DockerContainerInspect{}, err
+		return nil, err
 	}
-
-	return containerInspect, nil
+	resultDTO := containerInspect.ConvertIntoDockerInspectDTO()
+	return &resultDTO, nil
 }

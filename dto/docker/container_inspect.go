@@ -175,3 +175,35 @@ type DockerContainerInspect struct {
 		Propagation string `json:"Propagation"`
 	} `json:"Mounts"`
 }
+
+func (c *DockerContainerInspect) ConvertIntoDockerInspectDTO() ContainerInspectDTO {
+	result := ContainerInspectDTO{
+		Id:      c.ID,
+		Created: c.Created,
+		Name:    c.Name,
+		Path:    c.Path,
+		Args:    c.Args,
+		State: ContainerStatusDTO{
+			Status:     ContainerStatus(c.State.Status),
+			PID:        c.State.Pid,
+			StartedAt:  c.State.StartedAt,
+			FinishedAT: c.State.FinishedAt,
+		},
+		Running: c.State.Running,
+	}
+
+	result.Mount = make([]ContainerMountsPointDTO, len(c.Mounts))
+
+	for index, value := range c.Mounts {
+		result.Mount[index] = ContainerMountsPointDTO{
+			Name:         value.Name,
+			Source:       value.Source,
+			Destincation: value.Destination,
+			Driver:       value.Driver,
+			RW:           value.RW,
+			Propagation:  value.Propagation,
+		}
+	}
+
+	return result
+}
