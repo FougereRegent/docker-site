@@ -13,29 +13,30 @@
     <div id="main-content">
       <h1>Inspect Container</h1>
       <div id="panel-info">
-        <div id="general-info">
+        <div class="panel-container" id="general-info">
           <div class="info">
-            <p>Id :</p>
-            <p>{{.Id}}</p>
+            <h4>Id :</h2>
+              <li>{{.Id}}</li>
           </div>
           <div class="info">
-            <p>Name : </p>
-            <p>{{.Name}}</p>
+            <h4>Name : </h4>
+            <li>{{.Name}}</li>
           </div>
           <div class="info">
-            <p>Command : </p>
-            <p>{{.Path}}
+            <h4>Command : </h4>
+            <li>
+              {{.Path}}
               {{range .Args}}
               {{.}}
               {{end}}
-            </p>
+            </li>
           </div>
           <div class="info">
-            <p>Created at : </p>
-            <p>{{.Created}}</p>
+            <h4>Created at : </h4>
+            <li>{{.Created}}</li>
           </div>
         </div>
-        <div id="right-info">
+        <div class="panel-container" id="right-info">
           <div class="info">
             <p>Status : </p>
             <p>{{.State.Status}}</p>
