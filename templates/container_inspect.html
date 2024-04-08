@@ -1,35 +1,28 @@
-<html>
-
-<head>
-  {{template "head.html" .}}
-  <link rel="stylesheet" href="/assets/css/container_inspect.css" />
-</head>
-
-<body>
-  <div id="main">
-    <div id="navigation">
-      {{template "bar_menue.html" .}}
+{{$args_size := (len .Args)}}
+{{$container_name := .Name}}
+<div hx-swap-oob="true:#main-panel">
+  <div class="data-container" id="central-info">
+    <h2 class="docker-title">General</h2>
+    <div>
+      <p class="docker-value"><span class="docker-value-key">Name : </span>{{.Name}}</p>
+      <p class="docker-value"><span class="docker-value-key">Id : </span>{{.Id}}</p>
+      <p class="docker-value"><span class="docker-value-key">Created At : </span>{{.Created}}</p>
     </div>
-    <div id="main-content">
-      <h1>Inspect Container</h1>
-      <div id="content">
-        <div id="header">
-          <div class="data-container" id="button-header">
-            <input type="button" value="Start" />
-            <input type="button" value="Stop" />
-            <input type="button" value="Kill" />
-            <input type="button" value="Pause" />
-          </div>
-        </div>
-        <div id="main-panel">
-          <div class="data-container" id="central-info">
-          </div>
-          <div class="data-container" id="right-info">
-          </div>
-        </div>
-      </div>
+    <h2 class="docker-title">Details</h2>
+    <div>
+      <p class="docker-value"><span class="docker-value-key">PID : </span>{{.State.PID}}</p>
+      <p class="docker-value"><span class="docker-value-key">Command : </span>{{.Path}}</p>
+      {{if ne $args_size 0}}
+      <p class="docker-value"><span class="docker-value-key">Args : </span>{{.Args}}</p>
+      {{end}}
     </div>
   </div>
-</body>
-
-</html>
+  <div class="data-container" id="right-info">
+    <h2 class="docker-title">States</h2>
+    <p class="docker-value "><span class="docker-value-key">Status : </span>{{.State.Status}}</p>
+    <p class="docker-value "><span class="docker-value-key">Started At : </span>{{.State.StartedAt}}</p>
+    {{if .State.FinishedAt}}
+    <p class="docker-value "><span class="docker-value-key">Finished At : </span>{{.State.FinishedAt}}</p>
+    {{end}}
+  </div>
+</div>

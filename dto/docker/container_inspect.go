@@ -178,16 +178,16 @@ type DockerContainerInspect struct {
 
 func (c *DockerContainerInspect) ConvertIntoDockerInspectDTO() ContainerInspectDTO {
 	result := ContainerInspectDTO{
-		Id:      c.ID,
-		Created: c.Created,
-		Name:    c.Name,
+		Id:      c.ID[0:13],
+		Created: c.Created.Format("02/01/2006 15:03:05"),
+		Name:    c.Name[1:len(c.Name)],
 		Path:    c.Path,
 		Args:    c.Args,
 		State: ContainerStatusDTO{
 			Status:     ContainerStatus(c.State.Status),
 			PID:        c.State.Pid,
-			StartedAt:  c.State.StartedAt,
-			FinishedAT: c.State.FinishedAt,
+			StartedAt:  c.State.StartedAt.Format("02/01/2006 15:03:05"),
+			FinishedAt: c.State.FinishedAt.Format("02/01/2006 15:03:05"),
 		},
 		Running: c.State.Running,
 	}
