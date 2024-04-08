@@ -1,15 +1,32 @@
+@import url("/assets/css/color.css");
+
 .info {
-  flex-direction: row;
+  flex-direction: column;
   justify-content: start;
 }
 
 .info > p:first-child {
   margin-right: 0.5rem;
-  font-weight: bold;
+   font-weight: bold;
+}
+
+.info > li {
+  margin-left: 1rem;
+  margin-top: -1rem;
 }
 
 .info > p:nth-child(3) {
   margin-left: 0.5rem;
+}
+
+.info {
+  margin-right: 0.5rem;
+}
+
+.panel-container {
+  background-color: var(white);
+  border: solid 1px var(--gray);
+  padding: 0rem 0.5rem;
 }
 
 #panel-info {
@@ -19,7 +36,7 @@
 
 #general-info {
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: start;
 }
 
 #general-info, #panel-info, .info {

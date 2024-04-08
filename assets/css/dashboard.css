@@ -1,6 +1,4 @@
-:root {
-  --background-dashboard: white;
-}
+@import url("/assets/css/color.css");
 
 #dashboard {
   display: flex;

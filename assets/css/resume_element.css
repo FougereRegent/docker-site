@@ -1,6 +1,4 @@
-:root {
-  --backround-color-resume-element: e7e7e7
-}
+@import url("/assets/css/color.css");
 
 
 .resume-element-container {

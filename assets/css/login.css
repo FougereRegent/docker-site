@@ -1,4 +1,7 @@
-#title {
+@import url("/assets/css/color.css");
+
+
+title {
   font-weight: 600;
   text-align: center;
 }
