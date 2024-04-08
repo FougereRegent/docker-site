@@ -12,48 +12,7 @@
     </div>
     <div id="main-content">
       <h1>Inspect Container</h1>
-      <div id="panel-info">
-        <div class="panel-container" id="general-info">
-          <div class="info">
-            <h4>Id :</h2>
-              <li>{{.Id}}</li>
-          </div>
-          <div class="info">
-            <h4>Name : </h4>
-            <li>{{.Name}}</li>
-          </div>
-          <div class="info">
-            <h4>Command : </h4>
-            <li>
-              {{.Path}}
-              {{range .Args}}
-              {{.}}
-              {{end}}
-            </li>
-          </div>
-          <div class="info">
-            <h4>Created at : </h4>
-            <li>{{.Created}}</li>
-          </div>
-        </div>
-        <div class="panel-container" id="right-info">
-          <div class="info">
-            <p>Status : </p>
-            <p>{{.State.Status}}</p>
-          </div>
-          <div class="info">
-            <p>Pid : </p>
-            <p>{{.State.PID}}</p>
-          </div>
-          <div class="info">
-            <p>Started At : </p>
-            <p>{{.State.StartedAt}}</p>
-          </div>
-          <div class="info">
-            <p>FinishedAt : </p>
-            <p>{{.State.FinishedAt}}</p>
-          </div>
-        </div>
+      <div>
       </div>
     </div>
   </div>
