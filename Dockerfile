@@ -12,9 +12,9 @@ WORKDIR /app
 
 ENV GIN_MODE="release"
 
-COPY ./assets/ .
+COPY ./assets/ ./assets/
 RUN true
-COPY ./templates/ .
+COPY ./templates/ ./templates/
 RUN true
 COPY --from=builder /build/bin .
 
