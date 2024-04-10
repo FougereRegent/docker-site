@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: docker
+  tasks:
+    - name: Pull specific version
+      community.docker.docker_image_pull:
+        name: "fouegereregent39/docker-site"
+        tag: "{{ DOCKER_TAGS }}"
+
+
+    - name: Run Image on container
+      community.docker.docker_container:
+        name: "docker-site"
+        image: "fouegereregent39/docker-site:{{ DOCKER_TAGS }}"
+        ports:
+          - "8080:8080"
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
