@@ -4,9 +4,10 @@ pipeline {
     }
     agent any
     environment {
-        docker_image_name = "fouegereregent39/docker-site:dev-${env.BUILD_ID}"
+        docker_image_name = "fouegereregent39/docker-site"
         docker_credentials = "docker-hub-credentials"
         docker_image = ''
+        docker_image_latest = ''
     }
 
     stages {
@@ -20,7 +21,8 @@ pipeline {
         stage('Build Image') {
             steps {
                 script {
-                    docker_image = docker.build docker_image_name
+                    docker_image = docker.build "${docker_image_name}:dev-${env.BUILD_ID}"
+                    docker_image_latest = docker.build "${docker_image_name}:dev-latest"
                 }
             }
         }
@@ -29,6 +31,7 @@ pipeline {
                 script {
                     docker.withRegistry("", docker_credentials) {
                         docker_image.push()
+                        docker_image_latest.push()
                     }
                 }
             }
