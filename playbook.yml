@@ -5,13 +5,15 @@
     - name: Pull specific version
       community.docker.docker_image_pull:
         name: "fouegereregent39/docker-site"
-        tag: "{{ DOCKER_TAGS }}"
+        tag: "{{ DOCKER_TAG }}"
 
 
     - name: Run Image on container
       community.docker.docker_container:
         name: "docker-site"
-        image: "fouegereregent39/docker-site:{{ DOCKER_TAGS }}"
+        image: "fouegereregent39/docker-site:{{ DOCKER_TAG }}"
+        recreate: true
+        state: present
         ports:
           - "8080:8080"
         volumes:
