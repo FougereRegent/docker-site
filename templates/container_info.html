@@ -1,0 +1,31 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+  <link rel="stylesheet" href="/assets/css/container_inspect.css" />
+</head>
+
+<body>
+  {{$container_name := .Name}}
+  <div id="main">
+    <div id="navigation">
+      {{template "bar_menue.html" .}}
+    </div>
+    <div id="main-content">
+      <h1>Inspect Container</h1>
+      <div id="content">
+        <div hx-ws="connect:/docker/container/{{$container_name}}/buttons"></div>
+        <div id="header">
+        </div>
+        <div hx-ws="connect:/docker/container/{{$container_name}}/inspect">
+        </div>
+        <div id="main-panel">
+        </div>
+        <div hx-ws="connect:/docker/container/{{$container_name}}/logs">
+        </div>
+        <div id="log-panel">
+        </div>
+      </div>
+</body>
+
+</html>

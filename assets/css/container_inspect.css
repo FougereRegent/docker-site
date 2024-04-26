@@ -5,7 +5,8 @@
   flex-direction: column;
 }
 
-#header, #main-panel {
+#header,
+#main-panel {
   display: flex;
   flex-direction: row;
   justify-content: end;
@@ -18,11 +19,6 @@
   flex-grow: 0.2;
 }
 
-#main-panel {
-  margin: 0.8rem 0rem;
-  justify-content: space-between;
-}
-
 #central-info {
   flex-grow: 0.6;
 }
@@ -31,7 +27,40 @@
   flex-grow: 0.38;
 }
 
+#main-panel {
+  margin: 0.8rem 0rem;
+  justify-content: space-between;
+}
+
+#log-panel {
+  background-color: var(--gray);
+  padding: 1.2rem;
+  text-align: left;
+  height: 45rem;
+  overflow-y: scroll;
+  scrollbar-width: 10rem;
+}
+
 .data-container {
   border: solid 2px var(--gray);
-  padding: 0.2rem;
+  padding: 0rem 0.5rem;
+}
+
+.docker-title {
+  margin: 1.2rem 0.7rem;
+  border-bottom: solid 1px var(--gray);
+}
+
+.docker-value {
+  margin: 1.2rem 1rem;
+}
+
+.docker-value-key {
+  font-weight: bold;
+}
+
+p.logs {
+  white-space: pre-wrap;
+  color: black;
+  font-size: 1em;
 }

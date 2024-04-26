@@ -4,11 +4,12 @@ import (
 	"docker-site/controller"
 	"docker-site/entity"
 	"docker-site/helper"
+	"docker-site/helper/template"
 	"docker-site/middleware"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
+	tpl "html/template"
 )
 
 func main() {
@@ -16,7 +17,18 @@ func main() {
 	initDb()
 
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*.html")
+
+	htmlTemplate := tpl.New("html_template")
+
+	funcs := tpl.FuncMap{
+		"band": template.Band,
+		"bor":  template.Bor,
+		"bxor": template.Bxor,
+	}
+	htmlTemplate.Funcs(funcs)
+	htmlTemplate.ParseGlob("./templates/*.html")
+
+	router.SetHTMLTemplate(htmlTemplate)
 	router.Static("/assets", "./assets")
 
 	store := cookie.NewStore([]byte("secret"))
@@ -27,6 +39,11 @@ func main() {
 	router.GET("/", controller.ConnexionPage)
 	router.POST("/login", controller.Login)
 
+	/*Initialisation des controllers*/
+	containerController := controller.ContainerController{
+		Templ: htmlTemplate,
+	}
+
 	router.Use(middleware.AuthMiddleware)
 	{
 		router.GET("/home", controller.HomePage)
@@ -35,7 +52,11 @@ func main() {
 		router.GET("/docker/networks", controller.GetNetworks)
 		router.GET("/docker/images", controller.GetImages)
 		router.GET("/docker/volumes", controller.GetVolumes)
-		router.GET("/docker/container/:id", controller.InspectContainer)
+		router.GET("/docker/container/:id", containerController.ContainerInfo)
+		router.GET("/docker/container/:id/inspect", containerController.InspectContainer)
+		router.GET("/docker/container/:id/buttons", containerController.ButtonContainer)
+		router.POST("/docker/container/:id/:operation", containerController.HandleContainer)
+		router.GET("/docker/container/:id/logs", containerController.GetLogsContainer)
 		router.GET("/:page", controller.GoToPageDisplay)
 	}
 

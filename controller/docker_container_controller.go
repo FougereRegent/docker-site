@@ -1,52 +1,197 @@
 package controller
 
 import (
+	"bytes"
+	"docker-site/dto/docker"
 	"docker-site/service"
-	"github.com/gin-gonic/gin"
+	"fmt"
+	"html/template"
 	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 )
 
-//This files groups every containers controller like this :
-// - Delete
-// - Creation
-// - Start
-// - Stop
-// - Restart
+var status = map[docker.ContainerStatus]int8{
+	docker.RUNNING:    0b00010110,
+	docker.CREATED:    0b00000000,
+	docker.PAUSED:     0b00101010,
+	docker.RESTARTING: 0b00000000,
+	docker.REMOVING:   0b00000000,
+	docker.EXITED:     0b00000001,
+	docker.DEAD:       0b00000011,
+}
 
-// TODO : Implements deleting container in docker engine
-func DeleteContainer(c *gin.Context) {
+var upgrader = websocket.Upgrader{
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
+}
+
+var polling = time.Second * 1
+
+type ContainerController struct {
+	Templ *template.Template
+}
+
+func (o *ContainerController) HandleContainer(c *gin.Context) {
+	var op service.DockerCommand
+	operation := c.Param("operation")
+	id := c.Param("id")
+
+	if id == "" || operation == id {
+		c.Status(http.StatusBadRequest)
+		return
+	}
+
+	switch operation {
+	case "start":
+		op = service.START
+		break
+	case "restart":
+		op = service.RESTART
+		break
+	case "stop":
+		op = service.STOP
+		break
+	case "pause":
+		op = service.PAUSE
+		break
+	case "unpause":
+		op = service.UNPAUSE
+		break
+	case "kill":
+		op = service.KILL
+		break
+	default:
+		c.Status(http.StatusBadRequest)
+		break
+	}
+
+	if err := service.DockerHandle(id, op); err != nil {
+		c.Status(http.StatusBadRequest)
+	} else {
+		c.Status(http.StatusCreated)
+	}
 
 }
 
-// TODO : Implements creating container in docker engine
-func CreateContainer(c *gin.Context) {
-
-}
-
-// TODO : Implements starting container in docker engine
-func StartContainer(c *gin.Context) {
-
-}
-
-// TODO : Implements stopping container in docker engine
-func StopContainer(c *gin.Context) {
-
-}
-
-// TODO : Implements restarting container in docker engine
-func RestartContainer(c *gin.Context) {
-
-}
-
-// TODO : Implements inspect container
-func InspectContainer(c *gin.Context) {
+func (o *ContainerController) ContainerInfo(c *gin.Context) {
 	containerId := c.Param("id")
-	containerInspect, err := service.DockerInspect(containerId)
+	_, err := service.DockerInspect(containerId)
 
 	if err != nil {
+		c.Redirect(http.StatusPermanentRedirect, "/home")
+		return
+	}
+
+	c.HTML(http.StatusOK, "container_info.html", gin.H{
+		"Name": containerId,
+	})
+}
+
+func (o *ContainerController) InspectContainer(c *gin.Context) {
+	var conn *websocket.Conn
+	var err error
+
+	containerId := c.Param("id")
+	containerExist := service.DockerExist(containerId)
+
+	if !containerExist {
 		c.Status(http.StatusNotFound)
 		return
 	}
 
-	c.HTML(http.StatusOK, "container_inspect.html", containerInspect)
+	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		fmt.Println(err)
+		c.Redirect(http.StatusPermanentRedirect, "/home")
+		return
+	}
+
+	defer conn.Close()
+
+	for {
+		var buffer bytes.Buffer
+		var containerInspect *docker.ContainerInspectDTO
+
+		if containerInspect, err = service.DockerInspect(containerId); err != nil {
+			c.Redirect(http.StatusPermanentRedirect, "/home")
+			return
+		}
+
+		o.Templ.ExecuteTemplate(&buffer, "container_inspect.html", containerInspect)
+		conn.WriteMessage(websocket.TextMessage, []byte(buffer.String()))
+		time.Sleep(polling)
+	}
+}
+
+func (o *ContainerController) ButtonContainer(c *gin.Context) {
+	var conn *websocket.Conn
+	var err error
+
+	containerId := c.Param("id")
+	containerExist := service.DockerExist(containerId)
+	if !containerExist {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		c.Redirect(http.StatusPermanentRedirect, "/home")
+		return
+	}
+
+	defer conn.Close()
+
+	for {
+		var buffer bytes.Buffer
+		var containerStatus docker.ContainerStatus
+
+		if containerStatus, _ = service.DockerContainerStatus(containerId); containerStatus == docker.UNKNOW {
+			c.Redirect(http.StatusPermanentRedirect, "/home")
+			break
+		}
+
+		o.Templ.ExecuteTemplate(&buffer, "container_button.html", gin.H{
+			"Name":         containerId,
+			"VectorButton": status[containerStatus],
+		})
+		conn.WriteMessage(websocket.TextMessage, []byte(buffer.String()))
+		time.Sleep(polling)
+	}
+}
+
+func (o *ContainerController) GetLogsContainer(c *gin.Context) {
+	var conn *websocket.Conn
+	var err error
+
+	containerId := c.Param("id")
+
+	if containerExist := service.DockerExist(containerId); !containerExist {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		c.Redirect(http.StatusPermanentRedirect, "/home")
+		return
+	}
+
+	defer conn.Close()
+
+	for {
+		var buffer bytes.Buffer
+		var logs string
+		if logs, err = service.DockerContainerLogs(containerId); err != nil {
+			c.Redirect(http.StatusPermanentRedirect, "/home")
+			break
+		}
+
+		o.Templ.ExecuteTemplate(&buffer, "container_logs.html", gin.H{
+			"Logs": logs,
+		})
+
+		conn.WriteMessage(websocket.TextMessage, buffer.Bytes())
+		time.Sleep(polling)
+	}
 }

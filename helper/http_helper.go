@@ -24,10 +24,26 @@ type HttpClient struct {
 	UrlBase string
 }
 
+type BaseMethod struct {
+	header map[string]interface{}
+}
+
 type GetMethod struct {
+	*BaseMethod
 }
 
 type PostMethod struct {
+	*BaseMethod
+	data string
+}
+
+type DeleteMethod struct {
+	*BaseMethod
+}
+
+type PutMethod struct {
+	*BaseMethod
+	data string
 }
 
 var __client *HttpClient
@@ -75,7 +91,7 @@ func (meth *GetMethod) Send(path string, expectStatusCode int) (result []byte, e
 	}
 
 	if resp.StatusCode != expectStatusCode {
-		return nil, errors.New("Mauvais Status")
+		return nil, errors.New(fmt.Sprintf("%s : %d", "Status non attendu", resp.StatusCode))
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -95,7 +111,7 @@ func (meth *PostMethod) Send(path string, expectStatusCode int) (result []byte, 
 	}
 
 	if resp.StatusCode != expectStatusCode {
-		return nil, errors.New("Mauvais Status")
+		return nil, errors.New(fmt.Sprintf("%s : %d", "Status non attendu", resp.StatusCode))
 	}
 
 	body, err := io.ReadAll(resp.Body)
@@ -104,4 +120,12 @@ func (meth *PostMethod) Send(path string, expectStatusCode int) (result []byte, 
 		return nil, err
 	}
 	return body, nil
+}
+
+func (meth *DeleteMethod) Send(path string, expectStatusCode int) (result []byte, err error) {
+	return nil, nil
+}
+
+func (meth *PutMethod) Send(path string, expectStatusCode int) (result []byte, err error) {
+	return nil, nil
 }

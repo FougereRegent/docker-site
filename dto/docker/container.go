@@ -1,7 +1,5 @@
 package docker
 
-import "time"
-
 const (
 	BIND    MountType = "bind"
 	VOLUME  MountType = "volume"
@@ -18,6 +16,7 @@ const (
 	REMOVING   ContainerStatus = "removing"
 	EXITED     ContainerStatus = "exited"
 	DEAD       ContainerStatus = "dead"
+	UNKNOW     ContainerStatus = "unknow"
 )
 
 type MountType string
@@ -54,7 +53,7 @@ type ContainerInspectDTO struct {
 	Name    string
 	Path    string
 	Args    []string
-	Created time.Time
+	Created string
 	State   ContainerStatusDTO
 	Running bool
 	Mount   []ContainerMountsPointDTO
@@ -74,8 +73,8 @@ type ContainerMountsPointDTO struct {
 type ContainerStatusDTO struct {
 	Status     ContainerStatus
 	PID        int
-	StartedAt  time.Time
-	FinishedAT time.Time
+	StartedAt  string
+	FinishedAt string
 }
 
 func (c *DockerContainer) TransformToContainerDTO() ContainerDTO {

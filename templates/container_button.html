@@ -1,0 +1,25 @@
+{{$container_name := .Name}}
+
+{{$start_button_state := eq (band .VectorButton 1) 1}}
+{{$restart_button_state := eq (band .VectorButton 2) 2}}
+{{$stop_button_state := eq (band .VectorButton 4) 4}}
+{{$kill_button_state := eq (band .VectorButton 8) 8}}
+{{$pause_button_state := eq (band .VectorButton 16) 16}}
+{{$unpause_button_state := eq (band .VectorButton 32) 32}}
+
+<div hx-swap-oob="true:#header">
+  <div id="button-header" class="data-container">
+    <input type="button" value="Start" hx-post="/docker/container/{{$container_name}}/start" hx-trigger="click" {{if not
+      $start_button_state}} disabled {{end}} />
+    <input type="button" value="Restart" hx-post="/docker/container/{{$container_name}}/restart" hx-trigger="click" {{if
+      not $restart_button_state}} disabled {{end}} />
+    <input type="button" value="Stop" hx-post="/docker/container/{{$container_name}}/stop" hx-trigger="click" {{if not
+      $stop_button_state}} disabled {{end}} />
+    <input type="button" value="Kill" hx-post="/docker/container/{{$container_name}}/kill" hx-trigger="click" {{if not
+      $kill_button_state}} disabled {{end}} />
+    <input type="button" value="Pause" hx-post="/docker/container/{{$container_name}}/pause" hx-trigger="click" {{if not
+      $pause_button_state}} disabled {{end}} />
+    <input type="button" value="Unpause" hx-post="/docker/container/{{$container_name}}/unpause" hx-trigger="click" {{if
+      not $unpause_button_state}} disabled {{end}} />
+  </div>
+</div>
