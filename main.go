@@ -35,29 +35,32 @@ func main() {
 	/*Middleware*/
 	router.Use(sessions.Sessions("auth_cookie", store))
 
-	/*Init Route*/
-	router.GET("/", controller.ConnexionPage)
-	router.POST("/login", controller.Login)
-
 	/*Initialisation des controllers*/
 	containerController := controller.ContainerController{
 		Templ: htmlTemplate,
 	}
+	homeController := controller.HomeController{}
+	userController := controller.UserController{}
+	resumeController := controller.ResumeController{}
+
+	/*Init Route*/
+	router.GET("/", userController.ConnexionPage)
+	router.POST("/login", userController.Login)
 
 	router.Use(middleware.AuthMiddleware)
 	{
-		router.GET("/home", controller.HomePage)
-		router.GET("/docker/resume/:element", controller.GetResumeElement)
-		router.GET("/docker/containers", controller.GetContainers)
-		router.GET("/docker/networks", controller.GetNetworks)
-		router.GET("/docker/images", controller.GetImages)
-		router.GET("/docker/volumes", controller.GetVolumes)
+		router.GET("/home", homeController.HomePage)
+		router.GET("/docker/resume/:element", resumeController.GetResumeElement)
+		router.GET("/docker/containers", resumeController.GetContainers)
+		router.GET("/docker/networks", resumeController.GetNetworks)
+		router.GET("/docker/images", resumeController.GetImages)
+		router.GET("/docker/volumes", resumeController.GetVolumes)
+		router.GET("/:page", resumeController.GoToPageDisplay)
 		router.GET("/docker/container/:id", containerController.ContainerInfo)
 		router.GET("/docker/container/:id/inspect", containerController.InspectContainer)
 		router.GET("/docker/container/:id/buttons", containerController.ButtonContainer)
 		router.POST("/docker/container/:id/:operation", containerController.HandleContainer)
 		router.GET("/docker/container/:id/logs", containerController.GetLogsContainer)
-		router.GET("/:page", controller.GoToPageDisplay)
 	}
 
 	router.Run("0.0.0.0:8080")
