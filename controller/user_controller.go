@@ -11,23 +11,25 @@ import (
 	"net/http"
 )
 
-func CreateUser(c *gin.Context) {
+type UserController struct{}
+
+func (o *UserController) CreateUser(c *gin.Context) {
 
 }
 
-func DeleteUser(c *gin.Context) {
+func (o *UserController) DeleteUser(c *gin.Context) {
 
 }
 
-func UpdateUser(c *gin.Context) {
+func (o *UserController) UpdateUser(c *gin.Context) {
 
 }
 
-func GetUsers(c *gin.Context) {
+func (o *UserController) GetUsers(c *gin.Context) {
 
 }
 
-func Login(c *gin.Context) {
+func (o *UserController) Login(c *gin.Context) {
 	var user dto.UserFrontDTO
 	var userModel entity.UserModel
 	if err := c.Bind(&user); err != nil {
@@ -74,10 +76,10 @@ func Login(c *gin.Context) {
 	c.Status(http.StatusOK)
 }
 
-func Logout(c *gin.Context) {
+func (o *UserController) Logout(c *gin.Context) {
 
 }
 
-func ConnexionPage(c *gin.Context) {
+func (o *UserController) ConnexionPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "login_page.html", nil)
 }

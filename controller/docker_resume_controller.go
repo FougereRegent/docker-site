@@ -16,7 +16,9 @@ const (
 	NETWORK   string = "networks"
 )
 
-func GetResumeElement(c *gin.Context) {
+type ResumeController struct{}
+
+func (o *ResumeController) GetResumeElement(c *gin.Context) {
 	typeElement := c.Param("element")
 
 	switch typeElement {
@@ -54,7 +56,7 @@ func GetResumeElement(c *gin.Context) {
 	}
 }
 
-func GoToPageDisplay(c *gin.Context) {
+func (o *ResumeController) GoToPageDisplay(c *gin.Context) {
 	typePage := c.Param("page")
 
 	switch typePage {
@@ -71,7 +73,7 @@ func GoToPageDisplay(c *gin.Context) {
 
 }
 
-func GetContainers(c *gin.Context) {
+func (o *ResumeController) GetContainers(c *gin.Context) {
 	containers, err := service.GetContainersList()
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
@@ -94,7 +96,7 @@ func GetContainers(c *gin.Context) {
 	})
 }
 
-func GetImages(c *gin.Context) {
+func (o *ResumeController) GetImages(c *gin.Context) {
 	images, err := service.GetImagesList()
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
@@ -117,11 +119,11 @@ func GetImages(c *gin.Context) {
 }
 
 // TODO : Implements few later, it's use to get all networks
-func GetNetworks(c *gin.Context) {
+func (o *ResumeController) GetNetworks(c *gin.Context) {
 
 }
 
 // TODO : Implements few later, it's use to get all Volumes
-func GetVolumes(c *gin.Context) {
+func (o *ResumeController) GetVolumes(c *gin.Context) {
 
 }
