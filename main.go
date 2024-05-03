@@ -6,10 +6,12 @@ import (
 	"docker-site/helper"
 	"docker-site/helper/template"
 	"docker-site/middleware"
+	"fmt"
+	tpl "html/template"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
-	tpl "html/template"
 )
 
 func main() {
@@ -26,7 +28,11 @@ func main() {
 		"bxor": template.Bxor,
 	}
 	htmlTemplate.Funcs(funcs)
-	htmlTemplate.ParseGlob("./templates/*.html")
+
+	if _, err := htmlTemplate.ParseGlob("./templates/*.html"); err != nil {
+		fmt.Println(err)
+		return
+	}
 
 	router.SetHTMLTemplate(htmlTemplate)
 	router.Static("/assets", "./assets")
@@ -39,8 +45,8 @@ func main() {
 	containerController := controller.ContainerController{
 		Templ: htmlTemplate,
 	}
-	homeController := controller.HomeController{}
 	userController := controller.UserController{}
+	homeController := controller.HomeController{}
 	resumeController := controller.ResumeController{}
 
 	/*Init Route*/

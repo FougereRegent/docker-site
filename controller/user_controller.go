@@ -11,7 +11,8 @@ import (
 	"net/http"
 )
 
-type UserController struct{}
+type UserController struct {
+}
 
 func (o *UserController) CreateUser(c *gin.Context) {
 
