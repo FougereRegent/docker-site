@@ -170,11 +170,3 @@ func GetImagesList() ([]docker.ImageDTO, error) {
 
 	return dtoImages, nil
 }
-
-func GetNetworksList() {
-
-}
-
-func GetVolumesList() {
-
-}
