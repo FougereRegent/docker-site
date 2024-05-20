@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+//go:generate stringer -type DockerCommand
+
+type DockerCommand int
+
 const (
 	CONTAINER_INSPECT string = "containers/:id/json"
 	CONTAINER_CREATE  string = "containers/create"
@@ -40,8 +44,6 @@ var DICT_COMMAND = map[DockerCommand]string{
 	KILL:    CONTAINER_KILL,
 	UNPAUSE: CONTAINER_UNPAUSE,
 }
-
-type DockerCommand int
 
 func DockerHandle(nameContainer string, command DockerCommand) error {
 	client := helper.MakeRequest(helper.POST)

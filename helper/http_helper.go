@@ -8,12 +8,12 @@ import (
 	"net/http"
 )
 
+type Method int
+
 const (
 	POST Method = 0
 	GET  Method = 1
 )
-
-type Method int
 
 type MethodAction interface {
 	Send(path string, expectStatusCode int) (result []byte, err error)

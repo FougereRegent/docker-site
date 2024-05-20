@@ -16,18 +16,6 @@ type DockerImage struct {
 	Containers int               `json:"Containers"`
 }
 
-type ImageDTO struct {
-	Repository string `structs:"REPOSITORY"`
-	Tag        string `structs:"TAG"`
-	ImageID    string `structs:"IMAGE ID"`
-	Created    string `structs:"CREATED"`
-	Size       string `structs:"SIZE"`
-}
-
-func (c *DockerImage) ConvertSize() float64 {
-	return float64(c.Size) / 10e09
-}
-
 func (c *DockerImage) TransformToImageDTO() ImageDTO {
 	var tag string = "none"
 	var repository string = "none"
@@ -49,4 +37,8 @@ func (c *DockerImage) TransformToImageDTO() ImageDTO {
 		Created:    "",
 	}
 	return result
+}
+
+func (c *DockerImage) ConvertSize() float64 {
+	return float64(c.Size) / 10e09
 }
