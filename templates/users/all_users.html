@@ -1,0 +1,41 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+</head>
+
+<body>
+  <div id="main">
+    <div id="navigation">
+      {{template "bar_menue.html" .}}
+    </div>
+    <div id="main-content">
+      <h1>Users</h1>
+      <div class="">
+        <a href="/settings/user/add">Add User</a>
+      </div>
+      <div class="table-container">
+        <table class="fl-table">
+          <thead>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Last Connection</th>
+            <th></th>
+          </thead>
+          {{range .Users}}
+          <tr>
+            <td><a href="/settings/user/{{.Id}}">{{.Id}}</a></td>
+            <td><a href="/settings/user/{{.Id}}">{{.Name}}</a></td>
+            <td><a href="/settings/user/{{.Id}}">{{formatDate .LastConnection}}</a></td>
+            <td>
+              <input type="button" hx-delete="/settings/user/{{.Id}}" hx-trigger="click" value="delete" />
+            </td>
+          </tr>
+          {{end}}
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

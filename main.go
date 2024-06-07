@@ -6,6 +6,7 @@ import (
 	"docker-site/helper"
 	"docker-site/helper/template"
 	"docker-site/middleware"
+	"docker-site/service"
 	"fmt"
 	tpl "html/template"
 
@@ -23,13 +24,30 @@ func main() {
 	htmlTemplate := tpl.New("html_template")
 
 	funcs := tpl.FuncMap{
-		"band": template.Band,
-		"bor":  template.Bor,
-		"bxor": template.Bxor,
+		"band":       template.Band,
+		"bor":        template.Bor,
+		"bxor":       template.Bxor,
+		"formatDate": template.FomatDate,
 	}
 	htmlTemplate.Funcs(funcs)
 
 	if _, err := htmlTemplate.ParseGlob("./templates/*.html"); err != nil {
+		fmt.Println(err)
+		return
+	}
+	if _, err := htmlTemplate.ParseGlob("./templates/users/*.html"); err != nil {
+		fmt.Println(err)
+		return
+	}
+	if _, err := htmlTemplate.ParseGlob("./templates/container/*.html"); err != nil {
+		fmt.Println(err)
+		return
+	}
+	if _, err := htmlTemplate.ParseGlob("./templates/home/*.html"); err != nil {
+		fmt.Println(err)
+		return
+	}
+	if _, err := htmlTemplate.ParseGlob("./templates/components/*.html"); err != nil {
 		fmt.Println(err)
 		return
 	}
@@ -45,7 +63,16 @@ func main() {
 	containerController := controller.ContainerController{
 		Templ: htmlTemplate,
 	}
-	userController := controller.UserController{}
+	db, err := helper.GetDb()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	userController := controller.UserController{
+		UserService: &service.UserService{
+			Db: db,
+		},
+	}
 	homeController := controller.HomeController{}
 	resumeController := controller.ResumeController{}
 
@@ -67,13 +94,22 @@ func main() {
 		router.GET("/docker/container/:id/buttons", containerController.ButtonContainer)
 		router.POST("/docker/container/:id/:operation", containerController.HandleContainer)
 		router.GET("/docker/container/:id/logs", containerController.GetLogsContainer)
+		router.GET("/settings/users", userController.GetUsers)
+		router.GET("/settings/user/add", userController.AddUserPage)
+		router.POST("/settings/user/add", userController.AddUserPage)
+		router.DELETE("/settings/user/:id", userController.DeleteUser)
+		router.GET("/settings/user/:id", userController.GetUserDetails)
+		router.GET("/settings/user/:id/update", userController.UpdateUserDetails)
+		router.PUT("/settings/user/:id", userController.UpdateUserDetails)
+		router.GET("/settings/user/:id/password", userController.UpdateUserPassword)
+		router.PUT("/settings/user/:id/password", userController.UpdateUserPassword)
 	}
 
 	router.Run("0.0.0.0:8080")
 }
 
 func initDb() error {
-	db, err := helper.CreateDatabase("docker-site.sql")
+	db, err := helper.CreateDatabase("./docker-site.db")
 	if db == nil {
 		return err
 	}
@@ -81,13 +117,22 @@ func initDb() error {
 	var user entity.UserModel
 
 	hashPassword := helper.HashPassword("admin")
-	db.AutoMigrate(&entity.UserModel{})
-	if res := db.First(&user, "username = ?", "admin"); res.RowsAffected == 0 {
-		db.Create(&entity.UserModel{
+
+	db.AutoMigrate(&entity.UserModel{}, &entity.UserDetailsModel{}, &entity.UserConnectionModel{})
+
+	if res := db.Find(&user, "username = ?", "admin"); res.RowsAffected == 0 {
+		admin := entity.UserModel{
 			Username:       "admin",
 			HashedPassword: hashPassword.Digest,
 			Salt:           hashPassword.Salt,
-		})
+			UserDetails: entity.UserDetailsModel{
+				FirstName: "admin",
+				LastName:  "admin",
+			},
+		}
+
+		db.Create(&admin)
+		db.Save(&admin)
 	}
 
 	return nil

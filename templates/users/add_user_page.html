@@ -1,0 +1,37 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+</head>
+
+<body>
+  <div id="main">
+    <div id="navigation">
+      {{template "bar_menue.html" .}}
+    </div>
+    <div id="main-content">
+      <h1>Add Users</h1>
+      <form hx-post="/settings/user/add" hx-target="#form-response">
+        <div>
+          <label for="username">Username : </label>
+          <input name="username" type="text" />
+        </div>
+        <div>
+          <label for="password">Password : </label>
+          <input name="password" type="password" />
+        </div>
+        <div>
+          <label for="confirm-password">Confirm Password : </label>
+          <input name="confirm-password" type="password" />
+        </div>
+        <div>
+          <input type="submit" id="submit" value="create" />
+        </div>
+      </form>
+      <div id="form-response" hx-swap="outerHTML">
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

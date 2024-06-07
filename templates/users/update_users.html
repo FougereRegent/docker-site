@@ -1,0 +1,11 @@
+<div>
+  <form id="update" hx-put="/settings/user/{{.Id}}">
+    <label for="username">Username :</label>
+    <input id="username" name="username" type="text" value="{{.Username}}" disabled />
+    <label for="first_name">First Name :</label>
+    <input name="first_name" type="text" value="{{.FirstName}}" />
+    <label for="last_name">Last Name :</label>
+    <input name="last_name" type="text" value="{{.LastName}}" />
+    <input type="submit" value="submit">
+  </form>
+</div>
