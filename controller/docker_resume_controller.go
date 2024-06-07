@@ -74,19 +74,25 @@ func (o *ResumeController) GoToPageDisplay(c *gin.Context) {
 }
 
 func (o *ResumeController) GetContainers(c *gin.Context) {
+	var headers []string
+	var result []map[string]interface{}
 	containers, err := service.GetContainersList()
 	if err != nil {
 		c.Status(http.StatusInternalServerError)
 		return
 	}
 
-	result := make([]map[string]interface{}, len(containers))
+	if len(containers) < 1 {
+		goto result_func
+	}
+
+	result = make([]map[string]interface{}, len(containers))
 	for index, value := range containers {
 		result[index] = structs.Map(&value)
 	}
+	headers = structs.Names(containers[0])
 
-	headers := structs.Names(containers[0])
-
+result_func:
 	c.HTML(http.StatusOK, "tab_component.html", gin.H{
 		"tableau": dto.TabDTO{
 			UrlToScan: "/docker/containers",
