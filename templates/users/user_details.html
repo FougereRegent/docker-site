@@ -1,0 +1,27 @@
+<html>
+
+<head>
+  {{template "head.html" .}}
+</head>
+
+<body>
+  <div id="main">
+    <div id="navigation">
+      {{template "bar_menue.html" .}}
+    </div>
+    <div id="main-content">
+      <h1>User Details</h1>
+      <div id="info">
+        <input hx-get="./{{.Id}}/update" hx-trigger="click" type="button" hx-target="#info" hx-swap="outerHTML"
+          value="update" />
+        <input hx-get="./{{.Id}}/password" hx-trigger="click" type="button" hx-target="#info" hx-swap="outerHTML"
+          value="change password">
+        <p>Name : {{.Username}}</p>
+        <p>First Name : {{.FirstName}}</p>
+        <p>Last Name : {{.LastName}}</p>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
