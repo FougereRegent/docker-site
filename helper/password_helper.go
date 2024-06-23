@@ -31,8 +31,8 @@ func saltGenerator() string {
 	return string(result[:])
 }
 
-func CheckPassword(input_password string, hashes *HashedPassword) bool {
-	saltPassword := fmt.Sprintf("%s%s", input_password, hashes.Salt)
+func CheckPassword(inputPassword string, hashes *HashedPassword) bool {
+	saltPassword := fmt.Sprintf("%s%s", inputPassword, hashes.Salt)
 	hashPassword := sha256.Sum256([]byte(saltPassword))
 
 	return string(hashPassword[:]) == hashes.Digest
