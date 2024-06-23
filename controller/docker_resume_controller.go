@@ -3,6 +3,7 @@ package controller
 import (
 	"docker-site/dto"
 	"docker-site/service"
+	"log/slog"
 	"net/http"
 
 	"github.com/fatih/structs"
@@ -28,6 +29,7 @@ func (o *ResumeController) GetResumeElement(c *gin.Context) {
 	case CONTAINER:
 		resume, err := service.GetContainerResume()
 		if err != nil {
+			slog.Error(err.Error())
 			return
 		}
 		c.HTML(http.StatusOK, resumeElement, resume)
@@ -35,6 +37,7 @@ func (o *ResumeController) GetResumeElement(c *gin.Context) {
 	case IMAGE:
 		resume, err := service.GetImageResume()
 		if err != nil {
+			slog.Error(err.Error())
 			return
 		}
 		c.HTML(http.StatusOK, resumeElement, resume)
@@ -42,6 +45,7 @@ func (o *ResumeController) GetResumeElement(c *gin.Context) {
 	case NETWORK:
 		resume, err := service.GetNetworkResume()
 		if err != nil {
+			slog.Error(err.Error())
 			return
 		}
 		c.HTML(http.StatusOK, resumeElement, resume)
@@ -49,6 +53,7 @@ func (o *ResumeController) GetResumeElement(c *gin.Context) {
 	case VOLUME:
 		resume, err := service.GetVolumeResume()
 		if err != nil {
+			slog.Error(err.Error())
 			return
 		}
 		c.HTML(http.StatusOK, resumeElement, resume)
@@ -81,6 +86,7 @@ func (o *ResumeController) GetContainers(c *gin.Context) {
 	var result []map[string]interface{}
 	containers, err := service.GetContainersList()
 	if err != nil {
+		slog.Error(err.Error())
 		c.Status(http.StatusInternalServerError)
 		return
 	}
@@ -108,6 +114,7 @@ result_func:
 func (o *ResumeController) GetImages(c *gin.Context) {
 	images, err := service.GetImagesList()
 	if err != nil {
+		slog.Error(err.Error())
 		c.Status(http.StatusInternalServerError)
 		return
 	}

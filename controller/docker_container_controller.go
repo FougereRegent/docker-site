@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"docker-site/dto/docker"
 	"docker-site/service"
-	"fmt"
 	"html/template"
+	"log/slog"
 	"net/http"
 	"time"
 
@@ -69,6 +69,7 @@ func (o *ContainerController) HandleContainer(c *gin.Context) {
 	}
 
 	if err := service.DockerHandle(id, op); err != nil {
+		slog.Error(err.Error())
 		c.Status(http.StatusBadRequest)
 	} else {
 		c.Status(http.StatusCreated)
@@ -79,8 +80,9 @@ func (o *ContainerController) HandleContainer(c *gin.Context) {
 func (o *ContainerController) ContainerInfo(c *gin.Context) {
 	containerId := c.Param("id")
 	_, err := service.DockerInspect(containerId)
-
+	slog.Info("Get container info from ", "container id", containerId)
 	if err != nil {
+		slog.Error(err.Error())
 		c.Redirect(http.StatusPermanentRedirect, "/home")
 		return
 	}
@@ -95,15 +97,17 @@ func (o *ContainerController) InspectContainer(c *gin.Context) {
 	var err error
 
 	containerId := c.Param("id")
+	slog.Info("Get container inspect from ", "container id", containerId)
 	containerExist := service.DockerExist(containerId)
 
 	if !containerExist {
+		slog.Error("Container not found", "container id", containerId)
 		c.Status(http.StatusNotFound)
 		return
 	}
 
 	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
-		fmt.Println(err)
+		slog.Error(err.Error())
 		c.Redirect(http.StatusPermanentRedirect, "/home")
 		return
 	}
@@ -115,6 +119,7 @@ func (o *ContainerController) InspectContainer(c *gin.Context) {
 		var containerInspect *docker.ContainerInspectDTO
 
 		if containerInspect, err = service.DockerInspect(containerId); err != nil {
+			slog.Error(err.Error())
 			c.Redirect(http.StatusPermanentRedirect, "/home")
 			return
 		}
@@ -137,6 +142,7 @@ func (o *ContainerController) ButtonContainer(c *gin.Context) {
 	}
 
 	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		slog.Error(err.Error())
 		c.Redirect(http.StatusPermanentRedirect, "/home")
 		return
 	}
@@ -173,6 +179,7 @@ func (o *ContainerController) GetLogsContainer(c *gin.Context) {
 	}
 
 	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		slog.Error(err.Error())
 		c.Redirect(http.StatusPermanentRedirect, "/home")
 		return
 	}

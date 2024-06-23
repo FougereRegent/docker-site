@@ -7,12 +7,12 @@ import (
 	"docker-site/helper/htmx"
 	"docker-site/service"
 	"fmt"
-	"net/http"
-	"strconv"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/xid"
+	"log/slog"
+	"net/http"
+	"strconv"
 )
 
 type UserController struct {
@@ -57,6 +57,7 @@ func (o *UserController) UpdateUserPassword(c *gin.Context) {
 func (o *UserController) GetUsers(c *gin.Context) {
 	users, err := o.UserService.GetAllUsers()
 	if err != nil {
+		slog.Error(err.Error())
 		c.Status(http.StatusInternalServerError)
 	} else {
 		c.HTML(http.StatusOK, "all_users.html", gin.H{
@@ -91,6 +92,7 @@ func (o *UserController) Login(c *gin.Context) {
 	})
 
 	if err := session.Save(); err != nil {
+		slog.Error(err.Error())
 		c.Status(http.StatusInternalServerError)
 		return
 	}
