@@ -9,6 +9,8 @@ import (
 	"docker-site/service"
 	"fmt"
 	tpl "html/template"
+	"log/slog"
+	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -17,6 +19,7 @@ import (
 
 func main() {
 	helper.InitClient("/var/run/docker.sock", "http://localhost")
+	initLoger()
 	initDb()
 
 	router := gin.Default()
@@ -122,15 +125,14 @@ func main() {
 }
 
 func initDb() error {
+	var user entity.UserModel
 	db, err := helper.CreateDatabase("./docker-site.db")
 	if db == nil {
+		slog.Error(err.Error())
 		return err
 	}
 
-	var user entity.UserModel
-
 	hashPassword := helper.HashPassword("admin")
-
 	db.AutoMigrate(&entity.UserModel{}, &entity.UserDetailsModel{}, &entity.UserConnectionModel{})
 
 	if res := db.Find(&user, "username = ?", "admin"); res.RowsAffected == 0 {
@@ -144,9 +146,23 @@ func initDb() error {
 			},
 		}
 
-		db.Create(&admin)
-		db.Save(&admin)
+		if ctx := db.Create(&admin); ctx.Error != nil {
+			slog.Error(ctx.Error.Error())
+		}
+		if ctx := db.Save(&admin); ctx.Error != nil {
+			slog.Error(ctx.Error.Error())
+		}
 	}
 
 	return nil
+}
+
+func initLoger() {
+	if file, err := os.OpenFile("docker-site.log", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	} else {
+		logger := slog.New(slog.NewTextHandler(file, nil))
+		slog.SetDefault(logger)
+	}
 }
