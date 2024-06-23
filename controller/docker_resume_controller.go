@@ -19,6 +19,9 @@ const (
 type ResumeController struct{}
 
 func (o *ResumeController) GetResumeElement(c *gin.Context) {
+	const resumeElement = "resume_element.html"
+	const notFound = "not_found.html"
+
 	typeElement := c.Param("element")
 
 	switch typeElement {
@@ -27,31 +30,31 @@ func (o *ResumeController) GetResumeElement(c *gin.Context) {
 		if err != nil {
 			return
 		}
-		c.HTML(http.StatusOK, "resume_element.html", resume)
+		c.HTML(http.StatusOK, resumeElement, resume)
 		break
 	case IMAGE:
 		resume, err := service.GetImageResume()
 		if err != nil {
 			return
 		}
-		c.HTML(http.StatusOK, "resume_element.html", resume)
+		c.HTML(http.StatusOK, resumeElement, resume)
 		break
 	case NETWORK:
 		resume, err := service.GetNetworkResume()
 		if err != nil {
 			return
 		}
-		c.HTML(http.StatusOK, "resume_element.html", resume)
+		c.HTML(http.StatusOK, resumeElement, resume)
 		break
 	case VOLUME:
 		resume, err := service.GetVolumeResume()
 		if err != nil {
 			return
 		}
-		c.HTML(http.StatusOK, "resume_element.html", resume)
+		c.HTML(http.StatusOK, resumeElement, resume)
 		break
 	default:
-		c.HTML(http.StatusNotFound, "not_found.html", nil)
+		c.HTML(http.StatusNotFound, notFound, nil)
 		return
 	}
 }

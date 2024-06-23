@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"docker-site/dto"
 	"docker-site/dto/user"
+	"docker-site/helper/htmx"
 	"docker-site/service"
 	"fmt"
 	"net/http"
@@ -49,7 +50,7 @@ func (o *UserController) UpdateUserPassword(c *gin.Context) {
 		c.Bind(&passwordUpdate)
 		err := service.UpdatePassword(uint(id), passwordUpdate)
 		fmt.Println(err)
-		c.Header("HX-Redirect", fmt.Sprintf("/settings/user/%d", id))
+		c.Header(htmx.Redirect, fmt.Sprintf("/settings/user/%d", id))
 	}
 }
 
@@ -94,7 +95,7 @@ func (o *UserController) Login(c *gin.Context) {
 		return
 	}
 
-	c.Writer.Header().Add("HX-Redirect", "/home")
+	c.Writer.Header().Add(htmx.Redirect, "/home")
 	c.Status(http.StatusOK)
 }
 
@@ -124,7 +125,7 @@ func (o *UserController) AddUserPage(c *gin.Context) {
 			return
 		}
 
-		c.Header("HX-Redirect", "/settings/users")
+		c.Header(htmx.Redirect, "/settings/users")
 		c.Status(http.StatusCreated)
 
 	} else {
@@ -167,6 +168,6 @@ func (o *UserController) UpdateUserDetails(c *gin.Context) {
 		var userUpdate user.UserUpdateDTO
 		c.Bind(&userUpdate)
 		service.UpdateUser(uint(id), userUpdate)
-		c.Header("HX-Redirect", fmt.Sprintf("/settings/user/%d", id))
+		c.Header(htmx.Redirect, fmt.Sprintf("/settings/user/%d", id))
 	}
 }

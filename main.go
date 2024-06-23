@@ -83,26 +83,39 @@ func main() {
 	router.Use(middleware.AuthMiddleware)
 	{
 		router.GET("/home", homeController.HomePage)
-		router.GET("/docker/resume/:element", resumeController.GetResumeElement)
-		router.GET("/docker/containers", resumeController.GetContainers)
-		router.GET("/docker/networks", resumeController.GetNetworks)
-		router.GET("/docker/images", resumeController.GetImages)
-		router.GET("/docker/volumes", resumeController.GetVolumes)
 		router.GET("/:page", resumeController.GoToPageDisplay)
-		router.GET("/docker/container/:id", containerController.ContainerInfo)
-		router.GET("/docker/container/:id/inspect", containerController.InspectContainer)
-		router.GET("/docker/container/:id/buttons", containerController.ButtonContainer)
-		router.POST("/docker/container/:id/:operation", containerController.HandleContainer)
-		router.GET("/docker/container/:id/logs", containerController.GetLogsContainer)
-		router.GET("/settings/users", userController.GetUsers)
-		router.GET("/settings/user/add", userController.AddUserPage)
-		router.POST("/settings/user/add", userController.AddUserPage)
-		router.DELETE("/settings/user/:id", userController.DeleteUser)
-		router.GET("/settings/user/:id", userController.GetUserDetails)
-		router.GET("/settings/user/:id/update", userController.UpdateUserDetails)
-		router.PUT("/settings/user/:id", userController.UpdateUserDetails)
-		router.GET("/settings/user/:id/password", userController.UpdateUserPassword)
-		router.PUT("/settings/user/:id/password", userController.UpdateUserPassword)
+
+		dockerGroup := router.Group("/docker")
+		{
+			dockerGroup.GET("/resume/:element", resumeController.GetResumeElement)
+			dockerGroup.GET("/containers", resumeController.GetContainers)
+			dockerGroup.GET("/networks", resumeController.GetNetworks)
+			dockerGroup.GET("/images", resumeController.GetImages)
+			dockerGroup.GET("/volumes", resumeController.GetVolumes)
+		}
+		dockerContainer := router.Group("/docker/container")
+		{
+			dockerContainer.GET("/:id", containerController.ContainerInfo)
+			dockerContainer.GET("/:id/inspect", containerController.InspectContainer)
+			dockerContainer.GET("/:id/buttons", containerController.ButtonContainer)
+			dockerContainer.POST("/:id/:operation", containerController.HandleContainer)
+			dockerContainer.GET("/:id/logs", containerController.GetLogsContainer)
+		}
+		settings := router.Group("/settings")
+		{
+			settings.GET("/users", userController.GetUsers)
+			userManagement := settings.Group("/user")
+			{
+				userManagement.GET("/add", userController.AddUserPage)
+				userManagement.POST("/add", userController.AddUserPage)
+				userManagement.DELETE("/:id", userController.DeleteUser)
+				userManagement.GET("/:id", userController.GetUserDetails)
+				userManagement.GET("/:id/update", userController.UpdateUserDetails)
+				userManagement.PUT("/:id", userController.UpdateUserDetails)
+				userManagement.GET("/:id/password", userController.UpdateUserPassword)
+				userManagement.PUT("/:id/password", userController.UpdateUserPassword)
+			}
+		}
 	}
 
 	router.Run("0.0.0.0:8080")

@@ -1,6 +1,6 @@
 <div class="table-container" hx-get="{{.tableau.UrlToScan}}" hx-trigger="every 1200s" hx-swap="outerHTML"
   hx-taget="this">
-  <table class="fl-table">
+  <table class="fl-table" summary="tableau de composants">
     {{$Headers := .tableau.Headers}}
     <thead>
       {{range $Headers}}

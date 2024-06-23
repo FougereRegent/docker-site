@@ -13,11 +13,11 @@ type HashedPassword struct {
 
 func HashPassword(password string) HashedPassword {
 	salt := saltGenerator()
-	salt_password := fmt.Sprintf("%s%s", password, salt)
-	hash_password := sha256.Sum256([]byte(salt_password))
+	saltPassword := fmt.Sprintf("%s%s", password, salt)
+	hashPassword := sha256.Sum256([]byte(saltPassword))
 
 	return HashedPassword{
-		Digest: string(hash_password[:]),
+		Digest: string(hashPassword[:]),
 		Salt:   salt,
 	}
 }
@@ -32,8 +32,8 @@ func saltGenerator() string {
 }
 
 func CheckPassword(input_password string, hashes *HashedPassword) bool {
-	salt_password := fmt.Sprintf("%s%s", input_password, hashes.Salt)
-	hash_password := sha256.Sum256([]byte(salt_password))
+	saltPassword := fmt.Sprintf("%s%s", input_password, hashes.Salt)
+	hashPassword := sha256.Sum256([]byte(saltPassword))
 
-	return string(hash_password[:]) == hashes.Digest
+	return string(hashPassword[:]) == hashes.Digest
 }
