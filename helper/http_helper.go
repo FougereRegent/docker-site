@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"strings"
 )
 
 type Method int
@@ -17,6 +18,7 @@ const (
 
 type MethodAction interface {
 	Send(path string, expectStatusCode int) (result []byte, err error)
+	ReceiveStream(path string, expectStatusCode int, dataQueue chan string, quit chan int) error
 }
 
 type HttpClient struct {
@@ -120,6 +122,39 @@ func (meth *PostMethod) Send(path string, expectStatusCode int) (result []byte, 
 		return nil, err
 	}
 	return body, nil
+}
+
+func (meth *GetMethod) ReceiveStream(path string, expectStatusCode int, dataQueue chan string, quit chan int) error {
+	url := fmt.Sprintf("%s/%s", __client.UrlBase, path)
+
+	if resp, err := __client.Client.Get(url); err != nil {
+		return err
+	} else if resp.StatusCode != expectStatusCode {
+		return errors.New(fmt.Sprintf("%s : %d", "Status non attendu", resp.StatusCode))
+	} else {
+		buf := make([]byte, 1024)
+		for {
+			strBuilder := strings.Builder{}
+			nbBytes, _ := resp.Body.Read(buf)
+			strBuilder.Write(buf)
+			for buf[nbBytes-1] != '\n' && buf[nbBytes-2] != '\r' {
+				nbBytes, _ := resp.Body.Read(buf)
+				strBuilder.Write(buf[:nbBytes])
+			}
+
+			select {
+			case <-quit:
+				close(dataQueue)
+				return nil
+			default:
+				dataQueue <- strBuilder.String()
+			}
+		}
+	}
+}
+
+func (meth *PostMethod) ReceiveStream(path string, expectStatusCode int, dataQueue chan string, quit chan int) error {
+	return errors.ErrUnsupported
 }
 
 func (meth *DeleteMethod) Send(path string, expectStatusCode int) (result []byte, err error) {

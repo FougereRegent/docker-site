@@ -31,7 +31,8 @@ var upgrader = websocket.Upgrader{
 var polling = time.Second * 1
 
 type ContainerController struct {
-	Templ *template.Template
+	Templ              *template.Template
+	performanceService service.IDockerPerformanceService
 }
 
 func (o *ContainerController) HandleContainer(c *gin.Context) {
@@ -200,5 +201,38 @@ func (o *ContainerController) GetLogsContainer(c *gin.Context) {
 
 		conn.WriteMessage(websocket.TextMessage, buffer.Bytes())
 		time.Sleep(polling)
+	}
+}
+
+func (o *ContainerController) GetContainerPerformance(c *gin.Context) {
+	var conn *websocket.Conn
+	var err error
+
+	containerId := c.Param("id")
+
+	if containerExist := service.DockerExist(containerId); !containerExist {
+		c.Status(http.StatusNotFound)
+		return
+	}
+
+	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
+		slog.Error(err.Error())
+		c.Redirect(http.StatusPermanentRedirect, "/home")
+	}
+
+	dataQueue := make(chan docker.PerformanceDTO)
+	quitQueue := make(chan int)
+
+	defer func() {
+		quitQueue <- 1
+	}()
+
+	defer close(dataQueue)
+	defer close(quitQueue)
+	defer conn.Close()
+
+	go o.performanceService.GetContainerStatsStreams(containerId, dataQueue, quitQueue)
+
+	for {
 	}
 }

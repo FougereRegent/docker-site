@@ -103,6 +103,7 @@ func main() {
 			dockerContainer.GET("/:id/buttons", containerController.ButtonContainer)
 			dockerContainer.POST("/:id/:operation", containerController.HandleContainer)
 			dockerContainer.GET("/:id/logs", containerController.GetLogsContainer)
+			dockerContainer.GET("/:id/stats", containerController.GetContainerPerformance)
 		}
 		settings := router.Group("/settings")
 		{
