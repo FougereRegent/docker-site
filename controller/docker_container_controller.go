@@ -32,7 +32,7 @@ var polling = time.Second * 1
 
 type ContainerController struct {
 	Templ              *template.Template
-	performanceService service.IDockerPerformanceService
+	PerformanceService service.IDockerPerformanceService
 }
 
 func (o *ContainerController) HandleContainer(c *gin.Context) {
@@ -218,21 +218,31 @@ func (o *ContainerController) GetContainerPerformance(c *gin.Context) {
 	if conn, err = upgrader.Upgrade(c.Writer, c.Request, nil); err != nil {
 		slog.Error(err.Error())
 		c.Redirect(http.StatusPermanentRedirect, "/home")
+		return
 	}
+
+	defer conn.Close()
 
 	dataQueue := make(chan docker.PerformanceDTO)
 	quitQueue := make(chan int)
 
-	defer func() {
-		quitQueue <- 1
-	}()
-
 	defer close(dataQueue)
 	defer close(quitQueue)
-	defer conn.Close()
 
-	go o.performanceService.GetContainerStatsStreams(containerId, dataQueue, quitQueue)
+	go o.PerformanceService.GetContainerStatsStreams(containerId, dataQueue, quitQueue)
 
 	for {
+		if result, ok := <-dataQueue; ok {
+			var buffer bytes.Buffer
+			o.Templ.ExecuteTemplate(&buffer, "container_performance.html", result)
+			if err = conn.WriteMessage(websocket.TextMessage, buffer.Bytes()); err != nil {
+				slog.Error(err.Error())
+				quitQueue <- 1
+				return
+			}
+		} else {
+			quitQueue <- 1
+			return
+		}
 	}
 }

@@ -64,7 +64,8 @@ func main() {
 
 	/*Initialisation des controllers*/
 	containerController := controller.ContainerController{
-		Templ: htmlTemplate,
+		Templ:              htmlTemplate,
+		PerformanceService: &service.DockerPerformanceService{},
 	}
 	db, err := helper.GetDb()
 	if err != nil {

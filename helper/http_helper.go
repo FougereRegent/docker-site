@@ -125,26 +125,24 @@ func (meth *PostMethod) Send(path string, expectStatusCode int) (result []byte, 
 }
 
 func (meth *GetMethod) ReceiveStream(path string, expectStatusCode int, dataQueue chan string, quit chan int) error {
-	url := fmt.Sprintf("%s/%s", __client.UrlBase, path)
+	url := fmt.Sprintf("%s%s", __client.UrlBase, path)
 
 	if resp, err := __client.Client.Get(url); err != nil {
 		return err
-	} else if resp.StatusCode != expectStatusCode {
-		return errors.New(fmt.Sprintf("%s : %d", "Status non attendu", resp.StatusCode))
 	} else {
-		buf := make([]byte, 1024)
 		for {
+			buf := make([]byte, 1024)
 			strBuilder := strings.Builder{}
 			nbBytes, _ := resp.Body.Read(buf)
 			strBuilder.Write(buf)
-			for buf[nbBytes-1] != '\n' && buf[nbBytes-2] != '\r' {
-				nbBytes, _ := resp.Body.Read(buf)
+
+			for buf[nbBytes-1] != '\n' {
+				nbBytes, _ = resp.Body.Read(buf)
 				strBuilder.Write(buf[:nbBytes])
 			}
 
 			select {
 			case <-quit:
-				close(dataQueue)
 				return nil
 			default:
 				dataQueue <- strBuilder.String()

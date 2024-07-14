@@ -25,7 +25,11 @@
         </div>
         <div hx-ws="connect:/docker/container/{{$container_name}}/logs">
         </div>
+        <div hx-ws="connect:/docker/container/{{$container_name}}/stats">
+        </div>
         <div id="log-panel">
+        </div>
+        <div id="performance-panel">
         </div>
       </div>
 </body>

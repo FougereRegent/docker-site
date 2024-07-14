@@ -12,38 +12,47 @@ type DockerPerformanceService struct {
 }
 
 type IDockerPerformanceService interface {
-	GetContainerStatsStreams(id string, dataQueue chan docker.PerformanceDTO, quit chan int) error
+	GetContainerStatsStreams(id string, dataQueue chan docker.PerformanceDTO, quit chan int)
 }
 
 const (
-	CONTAINER_STATS string = "/containers/:id/stats"
+	CONTAINER_STATS string = "/containers/:id/stats?stream=true"
 )
 
-func (o DockerPerformanceService) GetContainerStats(id string, dataQueue chan docker.PerformanceDTO, quit chan int) error {
-	url := strings.ReplaceAll(CONTAINER_STATS, ":id", id)
-	dataQueueRequest := make(chan string)
-	quitRequest := make(chan int)
+func (o *DockerPerformanceService) GetContainerStatsStreams(id string, dataQueue chan docker.PerformanceDTO, quit chan int) {
+	var closeLoop bool = false
+	stringQueue := make(chan string)
+	leaveQueue := make(chan int)
 
-	defer close(dataQueueRequest)
-	defer close(quitRequest)
+	url := strings.Replace(CONTAINER_STATS, ":id", id, 1)
+	request := helper.MakeRequest(helper.GET)
 
-	client := helper.MakeRequest(helper.GET)
+	defer close(leaveQueue)
+	defer close(stringQueue)
 
-	go client.ReceiveStream(url, http.StatusOK, dataQueueRequest, quitRequest)
+	go request.ReceiveStream(url, http.StatusOK, stringQueue, leaveQueue)
 
-_loop:
-	select {
-	case msg := <-dataQueueRequest:
-		if value, err := parseJson(&msg); err != nil {
-			quitRequest <- 1
-		} else {
-			dataQueue <- value.ToPerformanceDTO()
+	for !closeLoop {
+		select {
+		case <-quit:
+			leaveQueue <- 1
+			closeLoop = true
+		case data := <-stringQueue:
+			if err := writeIntoChan([]byte(data), dataQueue); err != nil {
+				return
+			}
 		}
-		goto _loop
-	case msg := <-quit:
-		quitRequest <- msg
+	}
+	return
+}
+
+func writeIntoChan(data []byte, channel chan docker.PerformanceDTO) error {
+	var result docker.ContainerStats
+	if err := json.Unmarshal(data, &result); err != nil {
+		return err
 	}
 
+	channel <- result.ToPerformanceDTO()
 	return nil
 }
 
