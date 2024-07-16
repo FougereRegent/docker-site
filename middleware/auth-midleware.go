@@ -1,9 +1,11 @@
 package middleware
 
 import (
+	"docker-site/helper/htmx"
+	"net/http"
+
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func AuthMiddleware(c *gin.Context) {
@@ -12,7 +14,8 @@ func AuthMiddleware(c *gin.Context) {
 	userName := session.Get("username")
 
 	if sessionToken == nil || userName == nil {
-		c.HTML(http.StatusUnauthorized, "", nil)
+		c.Header(htmx.Redirect, "/")
+		c.Status(http.StatusPermanentRedirect)
 		c.Abort()
 	}
 
