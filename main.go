@@ -35,26 +35,7 @@ func main() {
 	}
 	htmlTemplate.Funcs(funcs)
 
-	if _, err := htmlTemplate.ParseGlob("./templates/*.html"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	if _, err := htmlTemplate.ParseGlob("./templates/users/*.html"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	if _, err := htmlTemplate.ParseGlob("./templates/container/*.html"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	if _, err := htmlTemplate.ParseGlob("./templates/home/*.html"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	if _, err := htmlTemplate.ParseGlob("./templates/components/*.html"); err != nil {
-		fmt.Println(err)
-		return
-	}
+	initTemplate(htmlTemplate, "./templates")
 
 	router.SetHTMLTemplate(htmlTemplate)
 	router.Static("/assets", "./assets")
@@ -167,5 +148,24 @@ func initLoger() {
 	} else {
 		logger := slog.New(slog.NewTextHandler(file, nil))
 		slog.SetDefault(logger)
+	}
+}
+
+func initTemplate(htmlTemplate *tpl.Template, path string) {
+	result, err := os.ReadDir(path)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
+	for _, value := range result {
+		if value.IsDir() {
+			newPath := fmt.Sprintf("%s/%s", path, value.Name())
+			if _, err := htmlTemplate.ParseGlob(fmt.Sprintf("%s/*.html", newPath)); err != nil {
+				fmt.Println(err)
+				os.Exit(-1)
+			}
+			initTemplate(htmlTemplate, newPath)
+		}
 	}
 }
