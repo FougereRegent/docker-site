@@ -1,7 +1,7 @@
 <div hx-swap-oob="true:#performance-panel">
-  <p>{{.UsedMemory}}</p>
-  <p>{{.AvailableMemory}}</p>
-  <p>{{.MemoryUsage}}</p>
-  <p>{{.CpuUsage}}</p>
-  <p>{{.CpuNumber}}</p>
+  <p>Memory Used : {{memoryFormat .UsedMemory}} / {{memoryFormat .AvailableMemory}}</p>
+  <p>Available Memory : {{.AvailableMemory}} %</p>
+  <p>Memory Usage : {{printf "%.2f" .MemoryUsage}} %</p>
+  <p>Cpu Usage : {{printf "%.2f" .CpuUsage}} %</p>
+  <p>Cpu Number : {{.CpuNumber}}</p>
 </div>

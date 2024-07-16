@@ -27,10 +27,11 @@ func main() {
 	htmlTemplate := tpl.New("html_template")
 
 	funcs := tpl.FuncMap{
-		"band":       template.Band,
-		"bor":        template.Bor,
-		"bxor":       template.Bxor,
-		"formatDate": template.FomatDate,
+		"band":         template.Band,
+		"bor":          template.Bor,
+		"bxor":         template.Bxor,
+		"formatDate":   template.FomatDate,
+		"memoryFormat": template.MemoryFormat,
 	}
 	htmlTemplate.Funcs(funcs)
 

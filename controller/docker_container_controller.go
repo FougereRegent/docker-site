@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"docker-site/dto/docker"
 	"docker-site/service"
+	"fmt"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -211,7 +212,18 @@ func (o *ContainerController) GetContainerPerformance(c *gin.Context) {
 	containerId := c.Param("id")
 
 	if containerExist := service.DockerExist(containerId); !containerExist {
+		slog.Info(fmt.Sprintf("%s : %s", containerId, "Container not found"))
 		c.Status(http.StatusNotFound)
+		return
+	}
+
+	if status, err := service.DockerContainerStatus(containerId); err != nil {
+		c.Status(http.StatusInternalServerError)
+		slog.Error(err.Error())
+		return
+	} else if status != docker.RUNNING {
+		c.Status(http.StatusNoContent)
+		slog.Info(fmt.Sprintf("%s %s", "No content for this container :", containerId))
 		return
 	}
 

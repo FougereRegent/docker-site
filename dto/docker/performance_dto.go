@@ -1,6 +1,8 @@
 package docker
 
-import "time"
+import (
+	"time"
+)
 
 type ContainerStats struct {
 	Read      time.Time `json:"read"`
@@ -111,11 +113,11 @@ type PerformanceDTO struct {
 func (o *ContainerStats) ToPerformanceDTO() PerformanceDTO {
 	usedMemory := o.MemoryStats.Usage - o.MemoryStats.Stats.Cache
 	availableMemory := o.MemoryStats.Limit
-	memoryUsage := float32(usedMemory) / float32(availableMemory) * 100.0
-	cpuDelta := o.CPUStats.SystemCPUUsage - int64(o.PrecpuStats.CPUUsage.TotalUsage)
+	memoryUsage := (float32(usedMemory) / float32(availableMemory)) * 100.0
+	cpuDelta := int64(o.CPUStats.CPUUsage.TotalUsage) - int64(o.PrecpuStats.CPUUsage.TotalUsage)
 	systemCpuDelta := o.CPUStats.SystemCPUUsage - o.PrecpuStats.SystemCPUUsage
 	numberCpus := o.CPUStats.OnlineCpus
-	cpuUsage := float32((cpuDelta / systemCpuDelta)) * float32(numberCpus) * 100.0
+	cpuUsage := (float32(cpuDelta) / float32(systemCpuDelta)) * float32(numberCpus) * 100.0
 
 	return PerformanceDTO{
 		UsedMemory:      usedMemory,
