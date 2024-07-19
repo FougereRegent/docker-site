@@ -4,6 +4,7 @@ import (
 	"docker-site/controller"
 	"docker-site/entity"
 	"docker-site/helper"
+	"docker-site/helper/config"
 	"docker-site/helper/template"
 	"docker-site/middleware"
 	"docker-site/service"
@@ -17,15 +18,23 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var conf *config.Conf
+
 func main() {
 	helper.InitClient("/var/run/docker.sock", "http://localhost")
+
+	var err error
+	if conf, err = config.ReadConfFromEnv(); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
 	initLoger()
 	initDb()
 
 	router := gin.Default()
 
 	htmlTemplate := tpl.New("html_template")
-
 	funcs := tpl.FuncMap{
 		"band":         template.Band,
 		"bor":          template.Bor,
@@ -34,7 +43,6 @@ func main() {
 		"memoryFormat": template.MemoryFormat,
 	}
 	htmlTemplate.Funcs(funcs)
-
 	initTemplate(htmlTemplate, "./templates")
 
 	router.SetHTMLTemplate(htmlTemplate)
@@ -58,6 +66,7 @@ func main() {
 		UserService: &service.UserService{
 			Db: db,
 		},
+		SessiontTime: conf.SessionTime(),
 	}
 	homeController := controller.HomeController{}
 	resumeController := controller.ResumeController{}
@@ -110,7 +119,7 @@ func main() {
 
 func initDb() error {
 	var user entity.UserModel
-	db, err := helper.CreateDatabase("./docker-site.db", helper.LOCAL)
+	db, err := helper.CreateDatabase(conf.ConnectionString(), conf.DataBase())
 	if db == nil {
 		slog.Error(err.Error())
 		return err

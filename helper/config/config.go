@@ -36,7 +36,7 @@ func ReadConfFromEnv() (*Conf, error) {
 	dataBase := os.Getenv(dataBaseEnv)
 	connectionString := os.Getenv(connectionStringEnv)
 
-	if sessionTime == "" || dataBase == "" || connectionString == "" {
+	if sessionTime == "" || dataBase == "" {
 		return nil, errors.New("Environment variable not set")
 	}
 

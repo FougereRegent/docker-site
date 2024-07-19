@@ -16,7 +16,8 @@ import (
 )
 
 type UserController struct {
-	UserService service.IUserService
+	UserService  service.IUserService
+	SessiontTime uint
 }
 
 func (o *UserController) DeleteUser(c *gin.Context) {
@@ -88,7 +89,7 @@ func (o *UserController) Login(c *gin.Context) {
 	session.Set("username", user.Username)
 	session.Set("token", sessionToken)
 	session.Options(sessions.Options{
-		MaxAge: 30 * 60,
+		MaxAge: 100 * 60,
 	})
 
 	if err := session.Save(); err != nil {

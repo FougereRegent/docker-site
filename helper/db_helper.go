@@ -57,6 +57,7 @@ func CreateDatabase(connectionString string, databaseType DataBaseType) (*gorm.D
 		break
 	case LOCAL:
 		fabrique = &_sqliteConnection{}
+		connectionString = "./docker-site.db"
 		break
 	}
 
