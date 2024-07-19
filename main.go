@@ -110,7 +110,7 @@ func main() {
 
 func initDb() error {
 	var user entity.UserModel
-	db, err := helper.CreateDatabase("./docker-site.db")
+	db, err := helper.CreateDatabase("./docker-site.db", helper.LOCAL)
 	if db == nil {
 		slog.Error(err.Error())
 		return err

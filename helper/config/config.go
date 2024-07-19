@@ -1,16 +1,10 @@
 package config
 
 import (
+	. "docker-site/helper"
 	"errors"
 	"os"
-)
-
-type DataBaseType int
-
-const (
-	LOCAL DataBaseType = iota
-	POSTGRES_SQL
-	MYSQL
+	"strconv"
 )
 
 const (
@@ -46,5 +40,31 @@ func ReadConfFromEnv() (*Conf, error) {
 		return nil, errors.New("Environment variable not set")
 	}
 
-	return &Conf{}, nil
+	sessionTimeConverted, err := strconv.ParseUint(sessionTime, 10, 64)
+	if err != nil {
+		return nil, err
+	}
+
+	var dataBaseType DataBaseType
+	switch dataBase {
+	case "LOCAL":
+		dataBaseType = LOCAL
+		break
+	case "POSTGRES_SQL":
+		dataBaseType = POSTGRES_SQL
+		break
+	case "MYSQL":
+		dataBaseType = MYSQL
+		break
+	default:
+		return nil, errors.New("")
+	}
+
+	result := &Conf{
+		sessionTime:      uint(sessionTimeConverted),
+		dataBase:         dataBaseType,
+		connectionString: connectionString,
+	}
+
+	return result, nil
 }
