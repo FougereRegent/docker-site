@@ -8,19 +8,24 @@
 </head>
 
 <body>
-  <h1 id="title">Docker Site</h1>
   <div id="root-container">
     <form id="connection" hx-post="/login" hx-target="#error-connection-div">
-      <div class="connection-field">
-        <label for="username">Username :</label>
-        <input name="username" type="text" placeholder="username" />
+      <div id="header-connection">
+        <h1 id="title-connection">Docker-Site</h1>
+        <img id="docker-logo" src="./assets/images/docker-logo.png" alt="docker logo" width="200px" />
+      </div>
+      <div id="credentials">
+        <div class="connection-field">
+          <label for="username">Username :</label>
+          <input class="text-box" id="username-field" name="username" type="text" placeholder="username" />
+        </div>
+        <div class="connection-field">
+          <label for="password">Password :</label>
+          <input class="text-box" id="password-field" name="password" type="password" placeholder="password" />
+        </div>
       </div>
       <div class="connection-field">
-        <label for="password">Password :</label>
-        <input name="password" type="password" placeholder="password" />
-      </div>
-      <div class="connection-field">
-        <input class="submit-button" type="submit" />
+        <input id="submit-button" type="submit" />
       </div>
       <div id="error-connection-div">
       </div>

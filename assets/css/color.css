@@ -1,8 +1,11 @@
 :root {
   --white: white;
-  --gray: #cdcdcd;
+  --gray: #858585;
+  --light-gray: #eaeaea;
   --light-blue: #2d6ef0;
-  --background-menu-item-color: #4c83f3;
+  --background-blue: #3090ec;
+  --background-white: white;
   --background-dashboard: white;
-  --backround-color-resume-element: e7e7e7
+  --background-menu-item-color: #4c83f3;
+  --backround-color-resume-element: #e7e7e7
 }
