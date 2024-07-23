@@ -59,28 +59,6 @@ body {
   opacity: 1;
 }
 
-@keyframes wave {
-  0% {
-    margin-left: 0;
-  }
-
-  100% {
-    margin-left: -1600px;
-  }
-}
-
-@keyframes swell {
-
-  0%,
-  100% {
-    transform: translate(0, -30px);
-  }
-
-  50% {
-    transform: translate(0, 5px);
-  }
-}
-
 #title-connection {
   margin-bottom: 1rem;
 }
@@ -128,4 +106,46 @@ body {
   border-radius: 20px;
   height: 2.5rem;
   background: var(--background-blue);
+}
+
+#submit-button:hover {
+  animation-name: hover-timing;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+#error-connection-div {
+  text-align: center;
+}
+
+@keyframes hover-timing {
+  from {
+    background: var(--background-blue);
+  }
+
+  to {
+    background: var(--background-blue-light);
+  }
+}
+
+@keyframes wave {
+  0% {
+    margin-left: 0;
+  }
+
+  100% {
+    margin-left: -1600px;
+  }
+}
+
+@keyframes swell {
+
+  0%,
+  100% {
+    transform: translate(0, -30px);
+  }
+
+  50% {
+    transform: translate(0, 5px);
+  }
 }

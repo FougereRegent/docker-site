@@ -167,13 +167,14 @@ func initTemplate(htmlTemplate *tpl.Template, path string) {
 		os.Exit(-1)
 	}
 
+	if _, err := htmlTemplate.ParseGlob(fmt.Sprintf("%s/*.html", path)); err != nil {
+		fmt.Println(err)
+		os.Exit(-1)
+	}
+
 	for _, value := range result {
 		if value.IsDir() {
 			newPath := fmt.Sprintf("%s/%s", path, value.Name())
-			if _, err := htmlTemplate.ParseGlob(fmt.Sprintf("%s/*.html", newPath)); err != nil {
-				fmt.Println(err)
-				os.Exit(-1)
-			}
 			initTemplate(htmlTemplate, newPath)
 		}
 	}
