@@ -2,6 +2,23 @@
 
 #dashboard {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  padding: 2rem 0;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.resume-element-container {
+  display: flex;
+  flex-direction: column;
+
+  padding: 0.5rem;
+  width: 20%;
+  height: 15%;
+
+  background-color: var(--backround-color-resume-element);
+
+  border-color: var(--backround-color-resume-element);
+  border-style: solid;
+  border-radius: 5px;
 }

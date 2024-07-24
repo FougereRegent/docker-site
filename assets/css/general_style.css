@@ -96,6 +96,8 @@ a {
   flex: 4;
   padding-left: 1rem;
   padding-top: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 #main {
